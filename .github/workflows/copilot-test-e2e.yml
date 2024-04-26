@@ -1,0 +1,112 @@
+name: Copilot Chat Tests
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: string
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    environment: ${{inputs.ENVIRONMENT}}
+    defaults:
+      run:
+        working-directory: webapp
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache-dependency-path: webapp/yarn.lock
+          cache: "yarn"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps
+
+      - name: Update AIService configuration
+        working-directory: webapi
+        env:
+          AzureOpenAI__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
+        run: |
+          dotnet dev-certs https
+          dotnet user-secrets set "KernelMemory:Services:AzureOpenAIText:APIKey" "$AzureOpenAI__ApiKey"
+          dotnet user-secrets set "KernelMemory:Services:AzureOpenAIText:Endpoint" ${{vars.AZURE_OPENAI_ENDPOINT}}
+          dotnet user-secrets set "KernelMemory:Services:AzureOpenAIEmbedding:APIKey" "$AzureOpenAI__ApiKey"
+          dotnet user-secrets set "KernelMemory:Services:AzureOpenAIEmbedding:Endpoint" ${{vars.AZURE_OPENAI_ENDPOINT}}
+          dotnet user-secrets set "Authentication:Type" "AzureAd"
+          dotnet user-secrets set "Authentication:AzureAd:TenantId" ${{vars.APPLICATION_TENANT_ID}}
+          dotnet user-secrets set "Authentication:AzureAd:ClientId" ${{vars.BACKEND_CLIENT_ID}}
+          dotnet user-secrets set "Frontend:AadClientId" ${{vars.APPLICATION_CLIENT_ID}}
+
+      - name: Start service in background
+        working-directory: webapi
+        run: |
+          dotnet run > service-log.txt 2>&1 &
+
+          STARTED=false;
+
+          for attempt in {0..20}; do
+            jobs
+            echo 'Waiting for service to start...';
+            if curl -k https://localhost:40443/healthz; then
+              echo;
+              echo 'Service started';
+              STARTED=true;
+              break;
+            fi;
+
+            sleep 5;
+          done
+
+          if [ "$STARTED" = false ]; then
+            echo 'Service failed to start';
+            exit 1;
+          fi
+
+      - name: Run Playwright tests
+        timeout-minutes: 5
+        env:
+          REACT_APP_BACKEND_URI: https://localhost:40443/
+
+          REACT_APP_TEST_USER_ACCOUNT1: ${{ secrets.COPILOT_CHAT_TEST_USER_ACCOUNT1 }}
+          REACT_APP_TEST_USER_ACCOUNT2: ${{ secrets.COPILOT_CHAT_TEST_USER_ACCOUNT2 }}
+          REACT_APP_TEST_USER_PASSWORD1: ${{ secrets.COPILOT_CHAT_TEST_USER_PASSWORD1 }}
+          REACT_APP_TEST_USER_PASSWORD2: ${{ secrets.COPILOT_CHAT_TEST_USER_PASSWORD2 }}
+
+          REACT_APP_TEST_JIRA_EMAIL: ${{ secrets.COPILOT_CHAT_TEST_JIRA_EMAIL }}
+          REACT_APP_TEST_JIRA_ACCESS_TOKEN: ${{ secrets.COPILOT_CHAT_TEST_JIRA_ACCESS_TOKEN }}
+          REACT_APP_TEST_JIRA_SERVER_URL: ${{ secrets.COPILOT_CHAT_TEST_JIRA_SERVER_URL }}
+
+          REACT_APP_TEST_GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REACT_APP_TEST_GITHUB_ACCOUNT_OWNER: ${{ secrets.COPILOT_CHAT_TEST_GITHUB_ACCOUNT_OWNER }}
+          REACT_APP_TEST_GITHUB_REPOSITORY_NAME: ${{ secrets.COPILOT_CHAT_TEST_GITHUB_REPOSITORY_NAME }}
+        run: yarn playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: webapp/playwright-report/
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: service-log
+          path: webapi/service-log.txt
+          retention-days: 30
