@@ -462,8 +462,8 @@ ENV/
 dist/
 
 # Peristant storage
-data/qdrant
-data/chatstore*
+*/data/qdrant
+*/data/chatstore*
 
 # Java build
 java/**/target
