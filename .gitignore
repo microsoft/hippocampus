@@ -464,6 +464,7 @@ dist/
 # Peristant storage
 */data/qdrant
 */data/chatstore*
+*/data/*.csv
 
 # Java build
 java/**/target
