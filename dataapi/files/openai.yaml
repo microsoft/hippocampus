@@ -2,6 +2,8 @@ openapi: 3.0.1
 info:
   title: DataApi
   version: '1.0'
+servers:
+- url: https://localhost:7115
 paths:
   /assets:
     get:
