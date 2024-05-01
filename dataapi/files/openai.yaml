@@ -1,0 +1,100 @@
+openapi: 3.0.1
+info:
+  title: DataApi
+  version: '1.0'
+paths:
+  /assets:
+    get:
+      tags:
+        - DataApi
+      operationId: GetAllAssets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assets'
+  /assets/{id}:
+    get:
+      tags:
+        - DataApi
+      operationId: GetAssetsByAccountNumber
+      parameters:
+        - name: id
+          in: path
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Assets:
+      type: object
+      properties:
+        accountNumber:
+          type: integer
+          format: int32
+        accountName:
+          type: string
+          nullable: true
+        installDate:
+          type: string
+          format: date-time
+          nullable: true
+        registeredDate:
+          type: string
+          format: date-time
+          nullable: true
+        shipDate:
+          type: string
+          format: date-time
+          nullable: true
+        assetNumber:
+          type: string
+          nullable: true
+        serialNumber:
+          type: string
+          nullable: true
+        addressLine1:
+          type: string
+          nullable: true
+        addressLine2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        zipcode:
+          type: string
+          nullable: true
+        productDescription:
+          type: string
+          nullable: true
+        partNumber:
+          type: string
+          nullable: true
+        productSegment:
+          type: string
+          nullable: true
+        productClass:
+          type: string
+          nullable: true
+        productGroup:
+          type: string
+          nullable: true
+        productLine:
+          type: string
+          nullable: true
+      additionalProperties: false
