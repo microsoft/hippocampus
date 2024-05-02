@@ -1,33 +1,55 @@
-﻿using DataApi.helpers;
-using Microsoft.AspNetCore.OpenApi;
+﻿//using Microsoft.AspNetCore.OData;
+//using Microsoft.OData.ModelBuilder;
+using DataApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<SingletonAssets>();
+
+//var modelBuilder = new ODataConventionModelBuilder();
+//modelBuilder.EntitySet<Asset>("Assets");
+
+//builder.Services.AddControllers().AddOData(
+//    options => options.Select().Filter().OrderBy().Expand().Count().SetMaxTop(null).AddRouteComponents(
+//        "odata",
+//        modelBuilder.GetEdmModel()));
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "GetDataAPI", Version = "v1" });
+
+    // Add a server
+    c.AddServer(new Microsoft.OpenApi.Models.OpenApiServer
+    {
+        //Url = "https://hippodataapi.azurewebsites.net/"
+        Url = "https://localhost:7115"
+    });
+});
+
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
+
+//app.UseRouting();
+
+//app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 
-CSVReader _csvReader = new();
-var assets = _csvReader.ReadCSV("files/assets.csv");
-
-
-app.MapGet("/assets", () => assets)
+app.MapGet("/assets", (SingletonAssets singletonAssets) => singletonAssets.Assets)
 .WithName("GetAllAssets")
 .WithOpenApi();
 
-app.MapGet("/assets/{id}", (int? id) =>
+app.MapGet("/assets/{accountNumber}", (int accountNumber, SingletonAssets singletonAssets) =>
 {
-    if (id.HasValue)
-    {
-        assets = assets.Where(a => a.AccountNumber == id.Value).ToList();
-    }
+    //if (accountNumber.HasValue)
+    //{
+    var assets = singletonAssets.Assets.Where(a => a.AccountNumber == accountNumber).ToList();
+    //}
 
     return Results.Ok(assets);
 })
@@ -35,3 +57,4 @@ app.MapGet("/assets/{id}", (int? id) =>
 .WithOpenApi();
 
 app.Run();
+

@@ -1,8 +1,9 @@
 ﻿using CsvHelper.Configuration;
+using DataApi.Models;
 
-namespace DataApi.helpers;
+namespace DataApi.Helpers;
 
-public class AssetsMap : ClassMap<Assets>
+public class AssetsMap : ClassMap<Asset>
 {
     public AssetsMap()
     {

@@ -1,7 +1,10 @@
-﻿namespace DataApi.helpers;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class Assets
+namespace DataApi.Models;
+
+public class Asset
 {
+    [Key, Required]
     public int AccountNumber { get; set; }
     public string? AccountName { get; set; }
     public DateTime? InstallDate { get; set; }
@@ -21,4 +24,16 @@ public class Assets
     public string? ProductClass { get; set; }
     public string? ProductGroup { get; set; }
     public string? ProductLine { get; set; }
+}
+
+
+public class SingletonAssets
+{
+    public List<Asset> Assets { get; private set; }
+
+    public SingletonAssets()
+    {
+        DataApi.Helpers.CSVReader _csvReader = new();
+        this.Assets = _csvReader.ReadCSV("files/half.csv");
+    }
 }
