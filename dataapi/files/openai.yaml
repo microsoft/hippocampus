@@ -1,9 +1,7 @@
 openapi: 3.0.1
 info:
   title: DataApi
-  version: '1.0'
-servers:
-- url: https://localhost:7115
+  version: "1.0"
 paths:
   /assets:
     get:
@@ -11,32 +9,35 @@ paths:
         - DataApi
       operationId: GetAllAssets
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Assets'
-  /assets/{id}:
+                  $ref: "#/components/schemas/Assets"
+  "/assets/{accountNumber}":
     get:
       tags:
         - DataApi
       operationId: GetAssetsByAccountNumber
       parameters:
-        - name: id
+        - name: accountNumber
           in: path
+          required: true
           style: simple
           schema:
             type: integer
             format: int32
       responses:
-        '200':
+        "200":
           description: OK
 components:
   schemas:
     Assets:
+      required:
+        - accountNumber
       type: object
       properties:
         accountNumber:
