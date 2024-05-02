@@ -196,6 +196,8 @@ public class ChatController : ControllerBase, IDisposable
 
         var tasks = new List<Task>();
 
+        tasks.Add(this.RegisterDataApiPlugin(kernel));
+
         // GitHub
         if (authHeaders.TryGetValue("GITHUB", out string? GithubAuthHeader))
         {
@@ -222,13 +224,22 @@ public class ChatController : ControllerBase, IDisposable
         await Task.WhenAll(tasks);
     }
 
+    private async Task RegisterDataApiPlugin(Kernel kernel)
+    {
+        this._logger.LogInformation("Enabling Data API plugin.");
+        await kernel.ImportPluginFromOpenApiAsync(
+            pluginName: "DataApiPlugin",
+            uri: new Uri("https://raw.githubusercontent.com/microsoft/hippocampus/dataapi/dataapi/files/openai.yaml")
+        );
+    }
+
     private async Task RegisterGithubPlugin(Kernel kernel, string GithubAuthHeader)
     {
         this._logger.LogInformation("Enabling GitHub plugin.");
         BearerAuthenticationProvider authenticationProvider = new(() => Task.FromResult(GithubAuthHeader));
         await kernel.ImportPluginFromOpenApiAsync(
             pluginName: "GitHubPlugin",
-            filePath: GetPluginFullPath("GitHubPlugin/openapi.json"),
+            filePath: GetPluginFullPath("OpenApi/GitHubPlugin/openapi.json"),
             new OpenApiFunctionExecutionParameters
             {
                 AuthCallback = authenticationProvider.AuthenticateRequestAsync,
