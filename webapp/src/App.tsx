@@ -6,6 +6,7 @@ import { FluentProvider, Subtitle1, makeStyles, shorthands, tokens } from '@flue
 import * as React from 'react';
 import { useEffect } from 'react';
 import { UserSettingsMenu } from './components/header/UserSettingsMenu';
+import { PluginGallery } from './components/open-api-plugins/PluginGallery';
 import { BackendProbe, ChatView, Error, Loading, Login } from './components/views';
 import { AuthHelper } from './libs/auth/AuthHelper';
 import { useChat, useFile } from './libs/hooks';
@@ -181,7 +182,7 @@ const Chat = ({
                 {appState > AppState.SettingUserInfo && (
                     <div className={classes.cornerItems}>
                         <div className={classes.cornerItems}>
-                            {/*<PluginGallery />*/}
+                            <PluginGallery />
                             <UserSettingsMenu
                                 setLoadingState={() => {
                                     setAppState(AppState.SigningOut);

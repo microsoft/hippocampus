@@ -1,14 +1,15 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 import { useMsal } from '@azure/msal-react';
-import { Button, Textarea, makeStyles, shorthands, tokens } from '@fluentui/react-components';
-import { MicRegular, SendRegular } from '@fluentui/react-icons';
+import { Button, Spinner, Textarea, makeStyles, mergeClasses, shorthands, tokens } from '@fluentui/react-components';
+import { AttachRegular, MicRegular, SendRegular } from '@fluentui/react-icons';
 import debug from 'debug';
 import * as speechSdk from 'microsoft-cognitiveservices-speech-sdk';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Constants } from '../../Constants';
 import { COPY } from '../../assets/strings';
 import { AuthHelper } from '../../libs/auth/AuthHelper';
+import { useFile } from '../../libs/hooks';
 import { GetResponseOptions } from '../../libs/hooks/useChat';
 import { AlertType } from '../../libs/models/AlertType';
 import { ChatMessageType } from '../../libs/models/ChatMessage';
@@ -72,25 +73,25 @@ const useClasses = makeStyles({
 });
 
 interface ChatInputProps {
-    //isDraggingOver?: boolean;
-    //onDragLeave: React.DragEventHandler<HTMLDivElement | HTMLTextAreaElement>;
+    isDraggingOver?: boolean;
+    onDragLeave: React.DragEventHandler<HTMLDivElement | HTMLTextAreaElement>;
     onSubmit: (options: GetResponseOptions) => Promise<void>;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ /*isDraggingOver, onDragLeave,*/ onSubmit }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ isDraggingOver, onDragLeave, onSubmit }) => {
     const classes = useClasses();
     const { instance, inProgress } = useMsal();
     const dispatch = useAppDispatch();
     const { conversations, selectedId } = useAppSelector((state: RootState) => state.conversations);
     const { activeUserInfo } = useAppSelector((state: RootState) => state.app);
-    //const fileHandler = useFile();
+    const fileHandler = useFile();
 
     const [value, setValue] = useState('');
     const [recognizer, setRecognizer] = useState<speechSdk.SpeechRecognizer>();
     const [isListening, setIsListening] = useState(false);
-    //const { importingDocuments } = conversations[selectedId];
+    const { importingDocuments } = conversations[selectedId];
 
-    //const documentFileRef = useRef<HTMLInputElement | null>(null);
+    const documentFileRef = useRef<HTMLInputElement | null>(null);
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
     React.useEffect(() => {
         // Focus on the text area when the selected conversation changes
@@ -155,10 +156,10 @@ export const ChatInput: React.FC<ChatInputProps> = ({ /*isDraggingOver, onDragLe
         });
     };
 
-    // const handleDrop = (e: React.DragEvent<HTMLTextAreaElement>) => {
-    //     onDragLeave(e);
-    //     void fileHandler.handleImport(selectedId, documentFileRef, false, undefined, e.dataTransfer.files);
-    // };
+    const handleDrop = (e: React.DragEvent<HTMLTextAreaElement>) => {
+        onDragLeave(e);
+        void fileHandler.handleImport(selectedId, documentFileRef, false, undefined, e.dataTransfer.files);
+    };
 
     return (
         <div className={classes.root}>
@@ -175,14 +176,13 @@ export const ChatInput: React.FC<ChatInputProps> = ({ /*isDraggingOver, onDragLe
                     resize="vertical"
                     disabled={conversations[selectedId].disabled}
                     textarea={{
-                        // className: isDraggingOver
-                        //     ? mergeClasses(classes.dragAndDrop, classes.textarea)
-                        //     : classes.textarea,
-                        className: classes.textarea,
+                        className: isDraggingOver
+                            ? mergeClasses(classes.dragAndDrop, classes.textarea)
+                            : classes.textarea,
                     }}
                     className={classes.input}
-                    //value={isDraggingOver ? 'Drop your files here' : value}
-                    //onDrop={handleDrop}
+                    value={isDraggingOver ? 'Drop your files here' : value}
+                    onDrop={handleDrop}
                     onFocus={() => {
                         // update the locally stored value to the current value
                         const chatInput = document.getElementById('chat-input');
@@ -197,9 +197,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({ /*isDraggingOver, onDragLe
                         }
                     }}
                     onChange={(_event, data) => {
-                        // if (isDraggingOver) {
-                        //     return;
-                        // }
+                        if (isDraggingOver) {
+                            return;
+                        }
 
                         setValue(data.value);
                         dispatch(editConversationInput({ id: selectedId, newInput: data.value }));
@@ -221,8 +221,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({ /*isDraggingOver, onDragLe
                 />
             </div>
             <div className={classes.controls}>
-                {/* <div className={classes.functional}>
-                    //Hidden input for file upload. Only accept .txt and .pdf files for now.
+                <div className={classes.functional}>
+                    {/* Hidden input for file upload. Only accept .txt and .pdf files for now. */}
                     <input
                         type="file"
                         ref={documentFileRef}
@@ -244,7 +244,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ /*isDraggingOver, onDragLe
                         aria-label="Attach file button"
                     />
                     {importingDocuments && importingDocuments.length > 0 && <Spinner size="tiny" />}
-                </div> */}
+                </div>
                 <div className={classes.essentials}>
                     {recognizer && (
                         <Button
