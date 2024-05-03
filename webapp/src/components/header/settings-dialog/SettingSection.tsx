@@ -58,7 +58,9 @@ export const SettingSection: React.FC<ISettingsSectionProps> = ({ setting, conte
                                 label={feature.label}
                                 checked={feature.enabled}
                                 disabled={
-                                    !!feature.inactive || (key === FeatureKeys.MultiUserChat && !AuthHelper.isAuthAAD())
+                                    !!feature.inactive ||
+                                    (key === FeatureKeys.MultiUserChat && !AuthHelper.isAuthAAD()) ||
+                                    key === FeatureKeys.PluginsPlannersAndPersonas
                                 }
                                 onChange={() => {
                                     onFeatureChange(key);
