@@ -59,6 +59,8 @@ public static class CopilotChatServiceExtensions
 
         AddOptions<FrontendOptions>(FrontendOptions.PropertyName);
 
+        AddOptions<DataApiOptions>(DataApiOptions.PropertyName);
+
         return services;
 
         void AddOptions<TOptions>(string propertyName)

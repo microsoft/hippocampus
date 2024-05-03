@@ -47,6 +47,7 @@ public class ChatController : ControllerBase, IDisposable
     private readonly List<IDisposable> _disposables;
     private readonly ITelemetryService _telemetryService;
     private readonly ServiceOptions _serviceOptions;
+    private readonly DataApiOptions _dataApiOptions;
     private readonly IDictionary<string, Plugin> _plugins;
 
     private const string ChatPluginName = nameof(ChatPlugin);
@@ -58,6 +59,7 @@ public class ChatController : ControllerBase, IDisposable
         IHttpClientFactory httpClientFactory,
         ITelemetryService telemetryService,
         IOptions<ServiceOptions> serviceOptions,
+        IOptions<DataApiOptions> dataApiOptions,
         IDictionary<string, Plugin> plugins)
     {
         this._logger = logger;
@@ -65,6 +67,7 @@ public class ChatController : ControllerBase, IDisposable
         this._telemetryService = telemetryService;
         this._disposables = new List<IDisposable>();
         this._serviceOptions = serviceOptions.Value;
+        this._dataApiOptions = dataApiOptions.Value;
         this._plugins = plugins;
     }
 
@@ -196,6 +199,8 @@ public class ChatController : ControllerBase, IDisposable
 
         var tasks = new List<Task>();
 
+        tasks.Add(this.RegisterDataApiPlugin(kernel));
+
         // GitHub
         if (authHeaders.TryGetValue("GITHUB", out string? GithubAuthHeader))
         {
@@ -222,13 +227,22 @@ public class ChatController : ControllerBase, IDisposable
         await Task.WhenAll(tasks);
     }
 
+    private async Task RegisterDataApiPlugin(Kernel kernel)
+    {
+        this._logger.LogInformation("Enabling Data API plugin.");
+        await kernel.ImportPluginFromOpenApiAsync(
+            pluginName: "DataApiPlugin",
+            uri: new Uri(this._dataApiOptions.SwaggerDocUrl)
+        );
+    }
+
     private async Task RegisterGithubPlugin(Kernel kernel, string GithubAuthHeader)
     {
         this._logger.LogInformation("Enabling GitHub plugin.");
         BearerAuthenticationProvider authenticationProvider = new(() => Task.FromResult(GithubAuthHeader));
         await kernel.ImportPluginFromOpenApiAsync(
             pluginName: "GitHubPlugin",
-            filePath: GetPluginFullPath("GitHubPlugin/openapi.json"),
+            filePath: GetPluginFullPath("OpenApi/GitHubPlugin/openapi.json"),
             new OpenApiFunctionExecutionParameters
             {
                 AuthCallback = authenticationProvider.AuthenticateRequestAsync,
