@@ -1,8 +1,0 @@
-﻿{
-  "BaseServerUrl": "https://localhost:40443/",
-  "ClientID": "YOUR_FRONTEND_CLIEND_ID",
-  "Authority": "https://login.microsoftonline.com/YOUR_TENANT_ID",
-  "TestUsername": "YOUR_TEST_USERNAME",
-  "TestPassword": "YOUR_TEST_PASSWORD", // Take care not to check your password in
-  "Scopes": "openid, offline_access, profile, api://YOUR_BACKEND_CLIENT_ID/access_as_user"
-}
