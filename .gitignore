@@ -5,6 +5,8 @@ dotnet/.config
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+*.csv
+
 # User-specific files
 *.rsuser
 *.suo
