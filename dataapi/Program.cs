@@ -44,6 +44,22 @@ app.MapGet("/assets", (SingletonAssets singletonAssets) => singletonAssets.Asset
 .WithName("GetAllAssets")
 .WithOpenApi();
 
+app.MapGet("/assetsByAccountName", (string accountName, SingletonAssets singletonAssets) =>
+{
+    var results = singletonAssets.Assets.Where(a => a.AccountName.Contains(accountName, StringComparison.OrdinalIgnoreCase)).ToList();
+    return results;
+})
+    .WithName("GetAssetsByAccountName")
+    .WithOpenApi();
+
+app.MapGet("/assetsByCountry", (string countryName, SingletonAssets singletonAssets) =>
+{
+    var results = singletonAssets.Assets.Where(a => a.Country.Contains(countryName, StringComparison.OrdinalIgnoreCase)).ToList();
+    return results;
+})
+    .WithName("GetAssetsByCountry")
+    .WithOpenApi();
+
 app.MapGet("/assets/{accountNumber}", (int accountNumber, SingletonAssets singletonAssets) =>
 {
     //if (accountNumber.HasValue)
