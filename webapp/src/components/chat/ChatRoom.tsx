@@ -47,15 +47,15 @@ export const ChatRoom: React.FC = () => {
     const scrollViewTargetRef = React.useRef<HTMLDivElement>(null);
     const [shouldAutoScroll, setShouldAutoScroll] = React.useState(true);
 
-    // const [isDraggingOver, setIsDraggingOver] = React.useState(false);
-    // const onDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    //     e.preventDefault();
-    //     setIsDraggingOver(true);
-    // };
-    // const onDragLeave = (e: React.DragEvent<HTMLDivElement | HTMLTextAreaElement>) => {
-    //     e.preventDefault();
-    //     setIsDraggingOver(false);
-    // };
+    const [isDraggingOver, setIsDraggingOver] = React.useState(false);
+    const onDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setIsDraggingOver(true);
+    };
+    const onDragLeave = (e: React.DragEvent<HTMLDivElement | HTMLTextAreaElement>) => {
+        e.preventDefault();
+        setIsDraggingOver(false);
+    };
 
     React.useEffect(() => {
         if (!shouldAutoScroll) return;
@@ -102,14 +102,14 @@ export const ChatRoom: React.FC = () => {
     }
 
     return (
-        <div className={classes.root} /*onDragEnter={onDragEnter} onDragOver={onDragEnter} onDragLeave={onDragLeave}*/>
+        <div className={classes.root} onDragEnter={onDragEnter} onDragOver={onDragEnter} onDragLeave={onDragLeave}>
             <div ref={scrollViewTargetRef} className={classes.scroll}>
                 <div className={classes.history}>
                     <ChatHistory messages={messages} />
                 </div>
             </div>
             <div className={classes.input}>
-                <ChatInput /*isDraggingOver={isDraggingOver} onDragLeave={onDragLeave}*/ onSubmit={handleSubmit} />
+                <ChatInput isDraggingOver={isDraggingOver} onDragLeave={onDragLeave} onSubmit={handleSubmit} />
             </div>
         </div>
     );
