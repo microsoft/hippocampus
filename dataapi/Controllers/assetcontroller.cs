@@ -22,17 +22,17 @@ public class AssetsController : ODataController
         return this.Ok(this.assets);
     }
 
-    [EnableQuery]
-    public ActionResult<Asset> Get([FromRoute] int key)
-    {
-        var item = this.assets.SingleOrDefault(d => d.AccountNumber.Equals(key));
+    //[EnableQuery]
+    //public ActionResult<Asset> Get([FromRoute] int key)
+    //{
+    //    var item = this.assets.SingleOrDefault(d => d.AccountNumber.Equals(key));
 
-        if (item == null)
-        {
-            return this.NotFound();
-        }
+    //    if (item == null)
+    //    {
+    //        return this.NotFound();
+    //    }
 
-        return this.Ok(item);
-    }
+    //    return this.Ok(item);
+    //}
 }
 
