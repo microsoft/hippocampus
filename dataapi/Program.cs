@@ -1,7 +1,7 @@
 ﻿using DataApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton<SingletonAssets>();
+builder.Services.AddSingleton<SingletonDatastore>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -24,8 +24,8 @@ app.UseSwaggerUI();
 app.UseRouting();
 
 // ------ Minimal API Routes -------
-
-app.MapGet("/assets", (string countryName, string accountName, SingletonAssets singletonAssets) =>
+// -- Assets --
+app.MapGet("/assets", (string countryName, string accountName, SingletonDatastore singletonAssets) =>
 {
     var results = singletonAssets.Assets;
     if (!string.IsNullOrEmpty(countryName))
@@ -49,10 +49,16 @@ app.MapGet("/assets", (string countryName, string accountName, SingletonAssets s
     return o;
 });
 
-app.MapGet("/assets/{accountNumber}", (int accountNumber, SingletonAssets singletonAssets) =>
+app.MapGet("/assets/{accountNumber}", (int accountNumber, SingletonDatastore singletonAssets) =>
     singletonAssets.Assets.Where(a => a.AccountNumber == accountNumber).ToList())
     .WithName("GetAssetsByAccountNumber")
     .WithSummary("Get an asset by account number")
+    .WithOpenApi();
+
+// -- Orders --
+app.MapGet("/orders", (SingletonDatastore singletonDatastore) => singletonDatastore.Orders)
+    .WithName("GetAllOrders")
+    .WithSummary("Get a list of all orders")
     .WithOpenApi();
 
 app.Run();

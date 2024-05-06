@@ -25,15 +25,3 @@ public class Asset
     public string? ProductGroup { get; set; }
     public string? ProductLine { get; set; }
 }
-
-
-public class SingletonAssets
-{
-    public List<Asset> Assets { get; private set; }
-
-    public SingletonAssets()
-    {
-        DataApi.Helpers.CSVReader _csvReader = new();
-        this.Assets = _csvReader.ReadCSV("files/half.csv");
-    }
-}
