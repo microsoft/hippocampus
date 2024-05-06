@@ -133,6 +133,9 @@ internal static class SemanticKernelExtensions
         // Time plugin
         kernel.ImportPluginFromObject(new TimePlugin(), nameof(TimePlugin));
 
+        // Http plugin
+        kernel.ImportPluginFromObject(new HttpPlugin(sp.GetRequiredService<HttpClient>()), nameof(HttpPlugin));
+
         return Task.CompletedTask;
     }
 
