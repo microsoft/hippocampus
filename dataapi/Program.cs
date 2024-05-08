@@ -1,5 +1,4 @@
 ﻿using DataApi.Data;
-using DataApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
