@@ -56,10 +56,6 @@ public class AssetsMap : ClassMap<Asset>
 {
     public AssetsMap()
     {
-<<<<<<< HEAD
-        DataApi.Helpers.CSVReader _csvReader = new();
-        this.Assets = _csvReader.ReadCSV("files/demo.csv");
-=======
         this.Map(m => m.AccountNumber).Name("ACCOUNT_NUMBER");
         this.Map(m => m.AccountName).Name("ACCOUNT_NAME");
         this.Map(m => m.InstallDate).Name("INSTALL_DATE");
@@ -79,6 +75,5 @@ public class AssetsMap : ClassMap<Asset>
         this.Map(m => m.ProductClass).Name("PROD_CLASS");
         this.Map(m => m.ProductGroup).Name("PROD_GROUP");
         this.Map(m => m.ProductLine).Name("PROD_LINE");
->>>>>>> main
     }
 }
