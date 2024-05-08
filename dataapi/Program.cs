@@ -1,4 +1,4 @@
-﻿using DataApi.Data;
+using DataApi.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,8 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Uncomment the following line to use local CSV files
 // builder.Services.AddSingleton<SingletonDatastore>();
 
-// Add sql dbcontext
-builder.Services.AddDbContext<SalesDb>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SalesDbConnection")));
+//var modelBuilder = new ODataConventionModelBuilder();
+//modelBuilder.EntitySet<Asset>("Assets");
+
+//builder.Services.AddControllers().AddOData(
+//    options => options.Select().Filter().OrderBy().Expand().Count().SetMaxTop(null).AddRouteComponents(
+//        "odata",
+//        modelBuilder.GetEdmModel()));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -22,12 +27,16 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
 var app = builder.Build();
 
+//if (app.Environment.IsDevelopment())
+//{
 app.UseSwagger();
 app.UseSwaggerUI();
+//}
 
-app.UseRouting();
+//app.UseRouting();
 
 // GET /assets - Get a list of all assets with optional query params
 app.MapGet("/assets",
@@ -53,14 +62,15 @@ app.MapGet("/assets",
     return results.ToList();
 })
 .WithName("GetAllAssets")
-.WithSummary("Get a list of all assets")
-.WithOpenApi(o =>
+.WithOpenApi();
+
+app.MapGet("/assetsByAccountName", (string accountName, SingletonAssets singletonAssets) =>
 {
-    o.Parameters[0].Description = "Name of a country to filter the list of assets";
-    o.Parameters[1].Description = "Name of an account to filter the list of assets";
-    o.Parameters[2].Description = "Name of a state to filter the list of assets";
-    return o;
-});
+    var results = singletonAssets.Assets.Where(a => a.AccountName.Contains(accountName, StringComparison.OrdinalIgnoreCase)).ToList();
+    return results;
+})
+    .WithName("GetAssetsByAccountName")
+    .WithOpenApi();
 
 // GET /assets/{accountNumber} - Get an asset by account number
 app.MapGet("/assets/{accountNumber}", (string accountNumber, SalesDb db) =>

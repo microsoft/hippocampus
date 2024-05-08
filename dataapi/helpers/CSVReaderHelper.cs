@@ -1,19 +1,19 @@
 ﻿using CsvHelper;
-using CsvHelper.Configuration;
+using DataApi.Models;
 using System.Globalization;
-
 namespace DataApi.Helpers;
 
-public class CSVReader<TMap> where TMap : ClassMap
+
+public class CSVReader
 {
-    public List<T> ReadCSV<T>(string filePath)
+    public List<Asset> ReadCSV(string filePath)
     {
         using (var reader = new StreamReader(filePath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
-            csv.Context.RegisterClassMap<TMap>();
-            var records = csv.GetRecords<T>();
-            return new List<T>(records);
+            csv.Context.RegisterClassMap<AssetsMap>();
+            var records = csv.GetRecords<Asset>();
+            return new List<Asset>(records);
         }
     }
 }
