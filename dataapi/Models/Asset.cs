@@ -34,6 +34,6 @@ public class SingletonAssets
     public SingletonAssets()
     {
         DataApi.Helpers.CSVReader _csvReader = new();
-        this.Assets = _csvReader.ReadCSV("files/half.csv");
+        this.Assets = _csvReader.ReadCSV("files/demo.csv");
     }
 }
