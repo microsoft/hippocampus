@@ -4,6 +4,9 @@ using DataApi.Models;
 
 namespace DataApi.Data;
 
+/// <summary>
+/// DbContext class for SalesDb database
+/// </summary>
 public class SalesDb : DbContext
 {
     public SalesDb(DbContextOptions<SalesDb> options) : base(options)
@@ -16,7 +19,13 @@ public class SalesDb : DbContext
         modelBuilder.Entity<Order>().ToTable("Sales");
     }
 
+    /// <summary>
+    /// Assets table
+    /// </summary>
     public DbSet<Asset> Assets { get; set; }
 
+    /// <summary>
+    /// Sales table
+    /// </summary>
     public DbSet<Order> Sales { get; set; }
 }
