@@ -1,9 +1,10 @@
 ﻿using DataApi.Data;
-using DataApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton<SingletonDatastore>();
+
+// Uncomment the following line to use local CSV files
+// builder.Services.AddSingleton<SingletonDatastore>();
 
 // Add sql dbcontext
 builder.Services.AddDbContext<SalesDb>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SalesDbConnection")));
@@ -28,8 +29,7 @@ app.UseSwaggerUI();
 
 app.UseRouting();
 
-// ------ Minimal API Routes -------
-// -- Assets --
+// GET /assets - Get a list of all assets with optional query params
 app.MapGet("/assets",
     (
         string countryName,
@@ -62,6 +62,7 @@ app.MapGet("/assets",
     return o;
 });
 
+// GET /assets/{accountNumber} - Get an asset by account number
 app.MapGet("/assets/{accountNumber}", (string accountNumber, SalesDb db) =>
     db.Assets.FirstOrDefault(a => a.AccountNumber.Equals(accountNumber)))
     .WithName("GetAssetsByAccountNumber")
@@ -74,11 +75,28 @@ app.MapGet("/assets/{accountNumber}", (string accountNumber, SalesDb db) =>
         return o;
     });
 
-// -- Orders --
-app.MapGet("/orders", (SingletonDatastore singletonDatastore) => singletonDatastore.Orders)
+// GET /orders - Get a list of all orders
+app.MapGet("/orders", async (SalesDb db) =>
+{
+    var results = await db.Sales.ToListAsync();
+    return results.Take(100);
+})
     .WithName("GetAllOrders")
     .WithSummary("Get a list of all orders")
     .WithOpenApi();
+
+// GET /orders/{salesOrderNumber} - Get an order by sales order number
+app.MapGet("/orders/{salesOrderNumber}", (long salesOrderNumber, SalesDb db) =>
+    db.Sales.FirstOrDefault(o => o.SalesOrderNumber == salesOrderNumber))
+    .WithName("GetOrderBySalesOrderNumber")
+    .WithSummary("Get an order by sales order number")
+    .WithOpenApi(o =>
+    {
+        o.Parameters[0].Required = true;
+        o.Parameters[0].Description = "Sales order number of the order to retrieve";
+        o.Parameters[0].In = Microsoft.OpenApi.Models.ParameterLocation.Path;
+        return o;
+    });
 
 app.Run();
 

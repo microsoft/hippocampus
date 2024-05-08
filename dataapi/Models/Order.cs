@@ -6,11 +6,14 @@ using CsvHelper.Configuration;
 
 namespace DataApi.Models;
 
+/// <summary>
+/// Data model for SalesOrder items from sales table.
+/// </summary>
 [Table("Sales")]
 public class Order
 {
     [Key, Required, Column("Sales Order Number")]
-    public string SalesOrderNumber { get; set; }
+    public long SalesOrderNumber { get; set; }
     [Column("Product Number")]
     public string ProductNumber { get; set; }
     [Column("Product Name")]
@@ -26,7 +29,7 @@ public class Order
     [Column("Product Line")]
     public string ProductLine { get; set; }
     [Column("Invoiced Quantity")]
-    public int InvoicedQuantity { get; set; }
+    public decimal InvoicedQuantity { get; set; }
     [Column("Invoiced Amount")]
     public decimal InvoicedAmount { get; set; }
     [Column("Ship To Location Country Name")]
@@ -36,13 +39,14 @@ public class Order
     [Column("Customer Name")]
     public string CustomerName { get; set; }
     [Column("Customer Number")]
-    public string CustomerNumber { get; set; }
+    public int CustomerNumber { get; set; }
     [Column("Quarter")]
     public string Quarter { get; set; }
     [Column("Year")]
-    public int Year { get; set; }
+    public short Year { get; set; }
 }
 
+[Obsolete("Only used for CSV mapping.")]
 public class OrdersMap : ClassMap<Order>
 {
     public OrdersMap()

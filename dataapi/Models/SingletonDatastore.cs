@@ -1,5 +1,6 @@
 ﻿namespace DataApi.Models;
 
+[Obsolete("Use this class only for loading local data files")]
 public class SingletonDatastore
 {
     public List<Asset> Assets { get; private set; }

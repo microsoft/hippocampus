@@ -199,8 +199,6 @@ public class ChatController : ControllerBase, IDisposable
 
         var tasks = new List<Task>();
 
-        tasks.Add(this.RegisterDataApiPlugin(kernel));
-
         // GitHub
         if (authHeaders.TryGetValue("GITHUB", out string? GithubAuthHeader))
         {
@@ -225,15 +223,6 @@ public class ChatController : ControllerBase, IDisposable
         }
 
         await Task.WhenAll(tasks);
-    }
-
-    private async Task RegisterDataApiPlugin(Kernel kernel)
-    {
-        this._logger.LogInformation("Enabling Data API plugin.");
-        await kernel.ImportPluginFromOpenApiAsync(
-            pluginName: "DataApiPlugin",
-            uri: new Uri(this._dataApiOptions.SwaggerDocUrl)
-        );
     }
 
     private async Task RegisterGithubPlugin(Kernel kernel, string GithubAuthHeader)
