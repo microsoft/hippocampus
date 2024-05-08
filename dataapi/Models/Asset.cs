@@ -5,6 +5,9 @@ using CsvHelper.Configuration;
 
 namespace DataApi.Models;
 
+/// <summary>
+/// Model class for Asset items.
+/// </summary>
 public class Asset
 {
     [Key, Required, Column("ACCOUNT_NUMBER")]
@@ -48,6 +51,7 @@ public class Asset
     public string ProductLine { get; set; }
 }
 
+[Obsolete("Only used for CSV mapping.")]
 public class AssetsMap : ClassMap<Asset>
 {
     public AssetsMap()
