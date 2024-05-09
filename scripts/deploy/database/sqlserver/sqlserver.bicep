@@ -68,8 +68,11 @@ resource sqlDeploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' 
         name: 'SQLADMIN'
         value: sqlAdmin
       }
+      {
+        name: 'SQLINIT'
+        value: loadTextContent('SQLServerInit.sql')
+      }
     ]
-
     scriptContent: '''
 wget https://github.com/microsoft/go-sqlcmd/releases/download/v0.8.1/sqlcmd-v0.8.1-linux-x64.tar.bz2
 tar x -f sqlcmd-v0.8.1-linux-x64.tar.bz2 -C .
@@ -84,6 +87,7 @@ go
 SCRIPT_END
 
 ./sqlcmd -S ${DBSERVER} -d ${DBNAME} -U ${SQLADMIN} -i ./initDb.sql
+./sqlcmd -S ${DBSERVER} -d ${DBNAME} -U ${SQLADMIN} -i ${SQLINIT}
     '''
   }
 }
