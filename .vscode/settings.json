@@ -1,7 +1,5 @@
 {
     "prettier.enable": true,
-    "editor.formatOnType": true,
-    "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "[csharp]": {
       "editor.defaultFormatter": "ms-dotnettools.csharp",

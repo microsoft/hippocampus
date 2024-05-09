@@ -76,8 +76,7 @@ var rgIdHash = uniqueString(resourceGroup().id)
 @description('Deployment name unique to resource group')
 var uniqueName = '${name}-${rgIdHash}'
 
-resource openAI 'Microsoft.CognitiveServices/accounts@2023-05-01' =
-  if (deployNewAzureOpenAI) {
+resource openAI 'Microsoft.CognitiveServices/accounts@2023-05-01' = if (deployNewAzureOpenAI) {
     name: 'ai-${uniqueName}'
     location: location
     kind: 'OpenAI'
@@ -89,8 +88,7 @@ resource openAI 'Microsoft.CognitiveServices/accounts@2023-05-01' =
     }
   }
 
-resource openAI_completionModel 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' =
-  if (deployNewAzureOpenAI) {
+resource openAI_completionModel 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = if (deployNewAzureOpenAI) {
     parent: openAI
     name: completionModel
     sku: {
@@ -105,8 +103,7 @@ resource openAI_completionModel 'Microsoft.CognitiveServices/accounts/deployment
     }
   }
 
-resource openAI_embeddingModel 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' =
-  if (deployNewAzureOpenAI) {
+resource openAI_embeddingModel 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = if (deployNewAzureOpenAI) {
     parent: openAI
     name: embeddingModel
     sku: {
@@ -376,8 +373,7 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
   }
 }
 
-resource appServiceWebDeploy 'Microsoft.Web/sites/extensions@2022-09-01' =
-  if (deployPackages) {
+resource appServiceWebDeploy 'Microsoft.Web/sites/extensions@2022-09-01' = if (deployPackages) {
     name: 'MSDeploy'
     kind: 'string'
     parent: appServiceWeb
@@ -503,8 +499,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
-resource azureAISearch 'Microsoft.Search/searchServices@2022-09-01' =
-  if (memoryStore == 'AzureAISearch') {
+resource azureAISearch 'Microsoft.Search/searchServices@2022-09-01' = if (memoryStore == 'AzureAISearch') {
     name: 'acs-${uniqueName}'
     location: location
     sku: {
@@ -516,8 +511,7 @@ resource azureAISearch 'Microsoft.Search/searchServices@2022-09-01' =
     }
   }
 
-resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' =
-  if (deployCosmosDB) {
+resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = if (deployCosmosDB) {
     name: toLower('cosmos-${uniqueName}')
     location: location
     kind: 'GlobalDocumentDB'
@@ -534,8 +528,7 @@ resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' =
     }
   }
 
-resource cosmosDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15' =
-  if (deployCosmosDB) {
+resource cosmosDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosAccount
     name: 'CopilotChat'
     properties: {
@@ -545,8 +538,7 @@ resource cosmosDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023
     }
   }
 
-resource messageContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' =
-  if (deployCosmosDB) {
+resource messageContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosDatabase
     name: 'chatmessages'
     properties: {
@@ -577,8 +569,7 @@ resource messageContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/co
     }
   }
 
-resource sessionContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' =
-  if (deployCosmosDB) {
+resource sessionContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosDatabase
     name: 'chatsessions'
     properties: {
@@ -609,8 +600,7 @@ resource sessionContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/co
     }
   }
 
-resource participantContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' =
-  if (deployCosmosDB) {
+resource participantContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosDatabase
     name: 'chatparticipants'
     properties: {
@@ -641,8 +631,7 @@ resource participantContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabase
     }
   }
 
-resource memorySourcesContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' =
-  if (deployCosmosDB) {
+resource memorySourcesContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosDatabase
     name: 'chatmemorysources'
     properties: {
