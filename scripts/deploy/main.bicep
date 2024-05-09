@@ -66,6 +66,10 @@ param deployPackages bool = true
 @description('Region for the resources')
 param location string = resourceGroup().location
 
+@description('SQL Admin user password')
+@secure()
+param sqlAdminUserPassword string
+
 @description('Hash of the resource group ID')
 var rgIdHash = uniqueString(resourceGroup().id)
 
@@ -385,6 +389,69 @@ resource appServiceWebDeploy 'Microsoft.Web/sites/extensions@2022-09-01' =
     ]
   }
 
+resource dataapiServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: 'asp-${uniqueName}-dataapi'
+  location: location
+  kind: 'app'
+  sku: {
+    name: webAppServiceSku
+  }
+}
+
+resource dataapiService 'Microsoft.Web/sites@2023-01-01' = {
+  name: 'app-${uniqueName}-dataapi'
+  location: location
+  kind: 'app'
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    serverFarmId: dataapiServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      healthCheckPath: '/healthz'
+    }
+  }
+}
+
+resource dataapiServiceConfig 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: dataapiService
+  name: 'web'
+  properties: {
+    alwaysOn: false
+    detailedErrorLoggingEnabled: true
+    minTlsVersion: '1.2'
+    netFrameworkVersion: 'v8.0'
+    use32BitWorkerProcess: false
+    vnetRouteAllEnabled: true
+    webSocketsEnabled: true
+    appSettings: [
+      {
+        name: 'ServerBaseUrl'
+        value: dataapiService.properties.defaultHostName
+      }
+    ]
+    connectionStrings: [
+      {
+        name: 'SalesDbConnection'
+        type: 'SQLAzure'
+        connectionString: 'Server=tcp:${salesData.outputs.sqlServerFQDN};Initial Catalog=SalesDataDb;Encrypt=True;TrustServerCertificate=False;Authentication=Active Directory Managed Identity;'
+      }
+    ]
+  }
+}
+
+module salesData 'database/sqlserver/sqlserver.bicep' = {
+  name: 'salesData'
+  params: {
+    location: location
+    databaseName: 'SalesDataDb'
+    name: 'SalesData-${uniqueName}-sql'
+    sqlAdminPassword: sqlAdminUserPassword
+    managedIdentityName: dataapiService.identity.principalId
+  }
+}
+
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: 'appins-${uniqueName}'
   location: location
@@ -608,3 +675,6 @@ resource memorySourcesContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDataba
 
 output webapiUrl string = appServiceWeb.properties.defaultHostName
 output webapiName string = appServiceWeb.name
+
+output dataapiUrl string = dataapiService.properties.defaultHostName
+output dataapiName string = dataapiService.name
