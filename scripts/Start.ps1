@@ -16,7 +16,10 @@ if (!$cmd) {
 $BackendScript = Join-Path "$PSScriptRoot" 'Start-Backend.ps1'
 $DataApiScript = Join-Path "$PSScriptRoot" 'Start-DataApi.ps1'
 $FrontendScript = Join-Path "$PSScriptRoot" 'Start-Frontend.ps1'
+$DataApiScript = Join-Path "$PSScriptRoot" 'Start-DataApi.ps1'
 
+# Start DataApi (in new PS process)
+Start-Process pwsh -ArgumentList "-command ""& '$DataApiScript'"""
 # Start backend (in new PS process)
 Start-Process pwsh -ArgumentList "-command ""& '$BackendScript'"""
 # check if the backend is running before proceeding
