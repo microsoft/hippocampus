@@ -158,11 +158,10 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
         'https://localhost:3000'
       ]
       supportCredentials: true
-    }
+    }    
     detailedErrorLoggingEnabled: true
     minTlsVersion: '1.2'
-    netFrameworkVersion: 'v6.0'
-    use32BitWorkerProcess: false
+    netFrameworkVersion: 'v6.0'    
     vnetRouteAllEnabled: true
     webSocketsEnabled: true
     appSettings: concat(
@@ -418,7 +417,6 @@ resource dataapiServiceConfig 'Microsoft.Web/sites/config@2022-09-01' = {
     detailedErrorLoggingEnabled: true
     minTlsVersion: '1.2'
     netFrameworkVersion: 'v8.0'
-    use32BitWorkerProcess: false
     vnetRouteAllEnabled: true
     webSocketsEnabled: true
     appSettings: [
