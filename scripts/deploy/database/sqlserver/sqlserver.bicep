@@ -87,7 +87,7 @@ go
 SCRIPT_END
 
 ./sqlcmd -S ${DBSERVER} -d ${DBNAME} -U ${SQLADMIN} -i ./initDb.sql
-./sqlcmd -S ${DBSERVER} -d ${DBNAME} -U ${SQLADMIN} -Q '${SQLINIT}'
+./sqlcmd -S ${DBSERVER} -d ${DBNAME} -U ${SQLADMIN} -Q "${SQLINIT}"
     '''
   }
 }

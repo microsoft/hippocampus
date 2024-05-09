@@ -1,3 +1,54 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Sales](
+	[Product Number] [nvarchar](max) NULL,
+	[Product Name] [nvarchar](max) NULL,
+	[Product Group] [nvarchar](max) NULL,
+	[Prod Sub Type] [nvarchar](max) NULL,
+	[Install Base Trackable Flag] [bit] NULL,
+	[Product Type] [nvarchar](max) NULL,
+	[Product Line] [nvarchar](max) NULL,
+	[Sales Order Number] [bigint] NULL,
+	[Invoiced Quantity] [decimal](10, 0) NULL,
+	[Invoiced Amount] [decimal](10, 0) NULL,
+	[Ship To Location Country Name] [nvarchar](max) NULL,
+	[Prod Segment] [nvarchar](max) NULL,
+	[Customer Name] [nvarchar](max) NULL,
+	[Customer Number] [int] NULL,
+	[Quarter] [nvarchar](max) NULL,
+	[Year] [smallint] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Assets](
+	[ACCOUNT_NUMBER] [nvarchar](max) NULL,
+	[ACCOUNT_NAME] [nvarchar](max) NULL,
+	[INSTALL_DATE] [date] NULL,
+	[REGISTERED_DATE] [date] NULL,
+	[SHIP_DATE] [date] NULL,
+	[ASSET_NUMBER] [nvarchar](max) NULL,
+	[SERIAL_NUMBER] [nvarchar](max) NULL,
+	[ADDR_LINE_1] [nvarchar](max) NULL,
+	[ADDR_LINE_1_1] [nvarchar](max) NULL,
+	[CITY] [nvarchar](max) NULL,
+	[COUNTRY] [nvarchar](max) NULL,
+	[STATE] [nvarchar](max) NULL,
+	[ZIPCODE] [nvarchar](max) NULL,
+	[PRODUCT_DESC] [nvarchar](max) NULL,
+	[PART_NUM] [nvarchar](max) NULL,
+	[PROD_SEGMENT] [nvarchar](max) NULL,
+	[PROD_CLASS] [nvarchar](max) NULL,
+	[PROD_GROUP] [nvarchar](max) NULL,
+	[PROD_LINE] [nvarchar](max) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 INSERT INTO [dbo].[Sales] (
     [Product Number],
     [Product Name],
@@ -17,7 +68,7 @@ INSERT INTO [dbo].[Sales] (
     [Year]
 )
 VALUES
-('3491845', 'NEURO PIXEL MONITOR 24"', 'EEG', 'Peripheral', 1, 'Accessories', 'BrainRT', 322323, 3, 1200, 'USA', 'Neuro', 'BRAIN HEALTH INSTITUTE', 12346, '2024 Q 1', 2024),
+('3491845', 'NEURO PIXEL MONITOR 24', 'EEG', 'Peripheral', 1, 'Accessories', 'BrainRT', 322323, 3, 1200, 'USA', 'Neuro', 'BRAIN HEALTH INSTITUTE', 12346, '2024 Q 1', 2024),
 ('3491846', 'SYNAPSE ENHANCER HEADSET', 'EEG', 'Wearable', 1, 'Devices', 'BrainRT', 322324, 2, 2200, 'Canada', 'Neuro', 'TORONTO NEUROLOGY LAB', 12347, '2024 Q 2', 2024),
 ('3491847', 'CEREBRAL SCANNER X200', 'EEG', 'Diagnostic', 1, 'Machinery', 'BrainRT', 322325, 1, 4500, 'Mexico', 'Neuro', 'MEXICO NEURO CENTER', 12348, '2024 Q 2', 2024),
 ('3491848', 'BRAIN MAPPING KIT PRO', 'EEG', 'Research', 1, 'Equipment', 'BrainRT', 322326, 5, 3000, 'Brazil', 'Neuro', 'RIO BRAIN RESEARCH', 12349, '2024 Q 3', 2024),
