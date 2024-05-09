@@ -1,7 +1,3 @@
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[Sales](
 	[Product Number] [nvarchar](max) NULL,
 	[Product Name] [nvarchar](max) NULL,
@@ -19,14 +15,8 @@ CREATE TABLE [dbo].[Sales](
 	[Customer Number] [int] NULL,
 	[Quarter] [nvarchar](max) NULL,
 	[Year] [smallint] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Assets](
+) 
+;CREATE TABLE [dbo].[Assets](
 	[ACCOUNT_NUMBER] [nvarchar](max) NULL,
 	[ACCOUNT_NAME] [nvarchar](max) NULL,
 	[INSTALL_DATE] [date] NULL,
@@ -46,10 +36,8 @@ CREATE TABLE [dbo].[Assets](
 	[PROD_CLASS] [nvarchar](max) NULL,
 	[PROD_GROUP] [nvarchar](max) NULL,
 	[PROD_LINE] [nvarchar](max) NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-
-INSERT INTO [dbo].[Sales] (
+) 
+;INSERT INTO [dbo].[Sales] (
     [Product Number],
     [Product Name],
     [Product Group],
@@ -83,10 +71,7 @@ VALUES
 ('3491857', 'COGNITIVE LOAD SENSOR', 'EEG', 'Sensor', 1, 'Devices', 'BrainRT', 322335, 1, 890, 'Denmark', 'Neuro', 'COPENHAGEN MIND LAB', 12358, '2025 Q 4', 2025),
 ('3491858', 'NEUROPLASTICITY STIMULATOR', 'EEG', 'Stimulation', 1, 'Devices', 'BrainRT', 322336, 4, 2400, 'Finland', 'Neuro', 'HELSINKI BRAIN INSTITUTE', 12359, '2025 Q 4', 2025),
 ('3491859', 'AUTONOMOUS NEURO MONITORING DRONE', 'EEG', 'Surveillance', 1, 'Equipment', 'BrainRT', 322337, 3, 3650, 'Ireland', 'Neuro', 'DUBLIN NEUROTECH', 12360, '2026 Q 1', 2026)
-;
-
-
-INSERT INTO [dbo].[Assets] ( 
+;INSERT INTO [dbo].[Assets] ( 
      [ACCOUNT_NUMBER]
       ,[ACCOUNT_NAME]
       ,[INSTALL_DATE]
