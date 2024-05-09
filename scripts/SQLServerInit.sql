@@ -1,3 +1,54 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Sales](
+	[Product Number] [nvarchar](max) NULL,
+	[Product Name] [nvarchar](max) NULL,
+	[Product Group] [nvarchar](max) NULL,
+	[Prod Sub Type] [nvarchar](max) NULL,
+	[Install Base Trackable Flag] [bit] NULL,
+	[Product Type] [nvarchar](max) NULL,
+	[Product Line] [nvarchar](max) NULL,
+	[Sales Order Number] [bigint] NULL,
+	[Invoiced Quantity] [decimal](10, 0) NULL,
+	[Invoiced Amount] [decimal](10, 0) NULL,
+	[Ship To Location Country Name] [nvarchar](max) NULL,
+	[Prod Segment] [nvarchar](max) NULL,
+	[Customer Name] [nvarchar](max) NULL,
+	[Customer Number] [int] NULL,
+	[Quarter] [nvarchar](max) NULL,
+	[Year] [smallint] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Assets](
+	[ACCOUNT_NUMBER] [nvarchar](max) NULL,
+	[ACCOUNT_NAME] [nvarchar](max) NULL,
+	[INSTALL_DATE] [date] NULL,
+	[REGISTERED_DATE] [date] NULL,
+	[SHIP_DATE] [date] NULL,
+	[ASSET_NUMBER] [nvarchar](max) NULL,
+	[SERIAL_NUMBER] [nvarchar](max) NULL,
+	[ADDR_LINE_1] [nvarchar](max) NULL,
+	[ADDR_LINE_1_1] [nvarchar](max) NULL,
+	[CITY] [nvarchar](max) NULL,
+	[COUNTRY] [nvarchar](max) NULL,
+	[STATE] [nvarchar](max) NULL,
+	[ZIPCODE] [nvarchar](max) NULL,
+	[PRODUCT_DESC] [nvarchar](max) NULL,
+	[PART_NUM] [nvarchar](max) NULL,
+	[PROD_SEGMENT] [nvarchar](max) NULL,
+	[PROD_CLASS] [nvarchar](max) NULL,
+	[PROD_GROUP] [nvarchar](max) NULL,
+	[PROD_LINE] [nvarchar](max) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 INSERT INTO [dbo].[Sales] (
     [Product Number],
     [Product Name],
