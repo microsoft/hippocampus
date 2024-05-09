@@ -66,14 +66,17 @@ param deployPackages bool = true
 @description('Region for the resources')
 param location string = resourceGroup().location
 
+@description('SQL Admin user password')
+@secure()
+param sqlAdminUserPassword string
+
 @description('Hash of the resource group ID')
 var rgIdHash = uniqueString(resourceGroup().id)
 
 @description('Deployment name unique to resource group')
 var uniqueName = '${name}-${rgIdHash}'
 
-resource openAI 'Microsoft.CognitiveServices/accounts@2023-05-01' =
-  if (deployNewAzureOpenAI) {
+resource openAI 'Microsoft.CognitiveServices/accounts@2023-05-01' = if (deployNewAzureOpenAI) {
     name: 'ai-${uniqueName}'
     location: location
     kind: 'OpenAI'
@@ -85,8 +88,7 @@ resource openAI 'Microsoft.CognitiveServices/accounts@2023-05-01' =
     }
   }
 
-resource openAI_completionModel 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' =
-  if (deployNewAzureOpenAI) {
+resource openAI_completionModel 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = if (deployNewAzureOpenAI) {
     parent: openAI
     name: completionModel
     sku: {
@@ -101,8 +103,7 @@ resource openAI_completionModel 'Microsoft.CognitiveServices/accounts/deployment
     }
   }
 
-resource openAI_embeddingModel 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' =
-  if (deployNewAzureOpenAI) {
+resource openAI_embeddingModel 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = if (deployNewAzureOpenAI) {
     parent: openAI
     name: embeddingModel
     sku: {
@@ -157,11 +158,10 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
         'https://localhost:3000'
       ]
       supportCredentials: true
-    }
+    }    
     detailedErrorLoggingEnabled: true
     minTlsVersion: '1.2'
-    netFrameworkVersion: 'v6.0'
-    use32BitWorkerProcess: false
+    netFrameworkVersion: 'v6.0'    
     vnetRouteAllEnabled: true
     webSocketsEnabled: true
     appSettings: concat(
@@ -372,8 +372,7 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
   }
 }
 
-resource appServiceWebDeploy 'Microsoft.Web/sites/extensions@2022-09-01' =
-  if (deployPackages) {
+resource appServiceWebDeploy 'Microsoft.Web/sites/extensions@2022-09-01' = if (deployPackages) {
     name: 'MSDeploy'
     kind: 'string'
     parent: appServiceWeb
@@ -384,6 +383,68 @@ resource appServiceWebDeploy 'Microsoft.Web/sites/extensions@2022-09-01' =
       appServiceWebConfig
     ]
   }
+
+resource dataapiServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: 'asp-${uniqueName}-dataapi'
+  location: location
+  kind: 'app'
+  sku: {
+    name: webAppServiceSku
+  }
+}
+
+resource dataapiService 'Microsoft.Web/sites@2023-01-01' = {
+  name: 'app-${uniqueName}-dataapi'
+  location: location
+  kind: 'app'
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    serverFarmId: dataapiServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      healthCheckPath: '/healthz'
+    }
+  }
+}
+
+resource dataapiServiceConfig 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: dataapiService
+  name: 'web'
+  properties: {
+    alwaysOn: false
+    detailedErrorLoggingEnabled: true
+    minTlsVersion: '1.2'
+    netFrameworkVersion: 'v8.0'
+    vnetRouteAllEnabled: true
+    webSocketsEnabled: true
+    appSettings: [
+      {
+        name: 'ServerBaseUrl'
+        value: dataapiService.properties.defaultHostName
+      }
+    ]
+    connectionStrings: [
+      {
+        name: 'SalesDbConnection'
+        type: 'SQLAzure'
+        connectionString: 'Server=tcp:${salesData.outputs.sqlServerFQDN};Initial Catalog=SalesDataDb;Encrypt=True;TrustServerCertificate=False;Authentication=Active Directory Managed Identity;'
+      }
+    ]
+  }
+}
+
+module salesData 'database/sqlserver/sqlserver.bicep' = {
+  name: 'salesData'
+  params: {
+    location: location
+    databaseName: 'SalesDataDb'
+    name: 'SalesData-${uniqueName}-sql'
+    sqlAdminPassword: sqlAdminUserPassword
+    managedIdentityName: dataapiService.identity.principalId
+  }
+}
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: 'appins-${uniqueName}'
@@ -436,8 +497,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
-resource azureAISearch 'Microsoft.Search/searchServices@2022-09-01' =
-  if (memoryStore == 'AzureAISearch') {
+resource azureAISearch 'Microsoft.Search/searchServices@2022-09-01' = if (memoryStore == 'AzureAISearch') {
     name: 'acs-${uniqueName}'
     location: location
     sku: {
@@ -449,8 +509,7 @@ resource azureAISearch 'Microsoft.Search/searchServices@2022-09-01' =
     }
   }
 
-resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' =
-  if (deployCosmosDB) {
+resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = if (deployCosmosDB) {
     name: toLower('cosmos-${uniqueName}')
     location: location
     kind: 'GlobalDocumentDB'
@@ -467,8 +526,7 @@ resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' =
     }
   }
 
-resource cosmosDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15' =
-  if (deployCosmosDB) {
+resource cosmosDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosAccount
     name: 'CopilotChat'
     properties: {
@@ -478,8 +536,7 @@ resource cosmosDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023
     }
   }
 
-resource messageContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' =
-  if (deployCosmosDB) {
+resource messageContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosDatabase
     name: 'chatmessages'
     properties: {
@@ -510,8 +567,7 @@ resource messageContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/co
     }
   }
 
-resource sessionContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' =
-  if (deployCosmosDB) {
+resource sessionContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosDatabase
     name: 'chatsessions'
     properties: {
@@ -542,8 +598,7 @@ resource sessionContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/co
     }
   }
 
-resource participantContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' =
-  if (deployCosmosDB) {
+resource participantContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosDatabase
     name: 'chatparticipants'
     properties: {
@@ -574,8 +629,7 @@ resource participantContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabase
     }
   }
 
-resource memorySourcesContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' =
-  if (deployCosmosDB) {
+resource memorySourcesContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = if (deployCosmosDB) {
     parent: cosmosDatabase
     name: 'chatmemorysources'
     properties: {
@@ -608,3 +662,6 @@ resource memorySourcesContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDataba
 
 output webapiUrl string = appServiceWeb.properties.defaultHostName
 output webapiName string = appServiceWeb.name
+
+output dataapiUrl string = dataapiService.properties.defaultHostName
+output dataapiName string = dataapiService.name

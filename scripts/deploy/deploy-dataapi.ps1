@@ -16,8 +16,8 @@ param(
 
     [Parameter(Mandatory)]
     [string]
-    # Name of the web application deployed in Azure
-    $WebAppName,
+    # Name of the previously deployed Azure deployment
+    $DeploymentName,
 
     [string]
     # Name of the web app deployment slot
@@ -53,15 +53,9 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Getting Azure WebApp resource name..."
-# $deployment = $(az deployment group show --name $DeploymentName --resource-group $ResourceGroupName --output json | ConvertFrom-Json)
-# $webApiUrl = $deployment.properties.outputs.webapiUrl.value
-# $webApiName = $deployment.properties.outputs.webapiName.value
-# $pluginNames = $deployment.properties.outputs.pluginNames.value
-$webAppInfo = az webapp show --name $WebAppName --resource-group $ResourceGroupName --output json | ConvertFrom-Json
-Write-Host $webAppInfo
-$webApiUrl = $webAppInfo.defaultHostName
-$webApiName = $WebAppName
-
+$deployment = $(az deployment group show --name $DeploymentName --resource-group $ResourceGroupName --output json | ConvertFrom-Json)
+$webApiUrl = $deployment.properties.outputs.dataapiUrl.value
+$webApiName = $deployment.properties.outputs.dataapiName.value
 
 if ($null -eq $webApiName) {
     Write-Error "Could not get Azure WebApp resource name from deployment output."

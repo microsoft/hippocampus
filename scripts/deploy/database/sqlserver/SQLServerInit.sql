@@ -68,7 +68,7 @@ INSERT INTO [dbo].[Sales] (
     [Year]
 )
 VALUES
-('3491845', 'NEURO PIXEL MONITOR 24"', 'EEG', 'Peripheral', 1, 'Accessories', 'BrainRT', 322323, 3, 1200, 'USA', 'Neuro', 'BRAIN HEALTH INSTITUTE', 12346, '2024 Q 1', 2024),
+('3491845', 'NEURO PIXEL MONITOR 24', 'EEG', 'Peripheral', 1, 'Accessories', 'BrainRT', 322323, 3, 1200, 'USA', 'Neuro', 'BRAIN HEALTH INSTITUTE', 12346, '2024 Q 1', 2024),
 ('3491846', 'SYNAPSE ENHANCER HEADSET', 'EEG', 'Wearable', 1, 'Devices', 'BrainRT', 322324, 2, 2200, 'Canada', 'Neuro', 'TORONTO NEUROLOGY LAB', 12347, '2024 Q 2', 2024),
 ('3491847', 'CEREBRAL SCANNER X200', 'EEG', 'Diagnostic', 1, 'Machinery', 'BrainRT', 322325, 1, 4500, 'Mexico', 'Neuro', 'MEXICO NEURO CENTER', 12348, '2024 Q 2', 2024),
 ('3491848', 'BRAIN MAPPING KIT PRO', 'EEG', 'Research', 1, 'Equipment', 'BrainRT', 322326, 5, 3000, 'Brazil', 'Neuro', 'RIO BRAIN RESEARCH', 12349, '2024 Q 3', 2024),

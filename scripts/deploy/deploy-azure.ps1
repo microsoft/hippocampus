@@ -14,12 +14,12 @@ param(
     # Subscription to which to make the deployment
     $Subscription,
 
-    [Parameter(Mandatory)]
+    #[Parameter(Mandatory)]
     [string]
     # Azure AD client ID for the Web API backend app registration
     $BackendClientId,
 
-    [Parameter(Mandatory)]
+    #[Parameter(Mandatory)]
     [string]
     # Azure AD client ID for the frontend app registration
     $FrontendClientId,
@@ -48,7 +48,7 @@ param(
 
     [string]
     # Region to which to make the deployment
-    $Region = "southcentralus",
+    $Region = "northcentralus",
 
     [string]
     # SKU for the Azure App Service plan
@@ -121,9 +121,7 @@ $jsonConfig = "
     `\`"frontendClientId`\`": { `\`"value`\`": `\`"$FrontendClientId`\`"},
     `\`"deployNewAzureOpenAI`\`": { `\`"value`\`": $(If ($DeployAzureOpenAI) {"true"} Else {"false"}) },
     `\`"memoryStore`\`": { `\`"value`\`": `\`"$MemoryStore`\`" },
-    `\`"deployCosmosDB`\`": { `\`"value`\`": $(If (!($NoCosmosDb)) {"true"} Else {"false"}) },
-    `\`"deploySpeechServices`\`": { `\`"value`\`": $(If (!($NoSpeechServices)) {"true"} Else {"false"}) },
-    `\`"deployWebSearcherPlugin`\`": { `\`"value`\`": $(If ($DeployWebSearcherPlugin) {"true"} Else {"false"}) }
+    `\`"deployCosmosDB`\`": { `\`"value`\`": $(If (!($NoCosmosDb)) {"true"} Else {"false"}) }
 }
 "
 
