@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen(c =>
     c.AddServer(new Microsoft.OpenApi.Models.OpenApiServer
     {
         //Url = "https://hippodataapi.azurewebsites.net/"
-        Url = "https://localhost:7115"
+        Url = builder.Configuration["ServerBaseUrl"]
     });
 });
 
