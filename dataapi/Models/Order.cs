@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
+// Copyright (c) Microsoft. All rights reserved.
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration;

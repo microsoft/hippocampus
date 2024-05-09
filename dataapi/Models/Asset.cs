@@ -54,7 +54,7 @@ public class Asset
     public string Country { get; set; }
 
     [Column("STATE")]
-    [Description("Customer state.")]
+    [Description("Contain a mix of state abbreviations from the United States, as well as abbreviations representing regions or provinces from other countries.")]
     public string State { get; set; }
 
     [Column("ZIPCODE")]
