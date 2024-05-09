@@ -442,7 +442,7 @@ module salesData 'database/sqlserver/sqlserver.bicep' = {
     databaseName: 'SalesDataDb'
     name: 'SalesData-${uniqueName}-sql'
     sqlAdminPassword: sqlAdminUserPassword
-    managedIdentityName: dataapiService.identity.principalId
+    managedIdentityName: dataapiService.name
   }
 }
 
