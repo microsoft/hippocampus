@@ -21,7 +21,7 @@ public class Order
     public string ProductNumber { get; set; }
 
     [Column("Product Name")]
-    [Description("Name of the product. This includes products which either the company or its partners manufacture. Some product names represent components or parts of a larger syste. Some products also indicate how many pieces there are, suck as 10pk or 5pcs. This should not be confused with products which numerically indicate clinical details, such as '64-channel' products of various types, or 'Pin Box 193-256' which would be purchased by a customer who clearly has/uses up to 256-channel systems.")]
+    [Description("Name of the product. This includes products which either the company or its partners manufacture. Some product names represent components or parts of a larger system. Some products also indicate how many pieces there are, suck as 10pk or 5pcs. This should not be confused with products which numerically indicate clinical details, such as '64-channel' products of various types, or 'Pin Box 193-256' which would be purchased by a customer who clearly has/uses up to 256-channel systems.")]
     public string ProductName { get; set; }
 
     [Column("Product Group")]
