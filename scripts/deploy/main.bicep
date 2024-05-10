@@ -260,7 +260,7 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
         }
         {
           name: 'KernelMemory:ContentStorageType'
-          value: 'AzureBlobs'
+          value: 'SimpleFileStorage'
         }
         {
           name: 'KernelMemory:TextGeneratorType'
