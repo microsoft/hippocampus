@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Core;
+using CopilotChat.WebApi.Plugins;
 using Microsoft.SemanticKernel.Plugins.OpenApi;
 
 namespace CopilotChat.WebApi.Extensions;
@@ -71,7 +72,7 @@ internal static class SemanticKernelExtensions
 
         // Add any additional setup needed for the kernel.
         // Uncomment the following line and pass in a custom hook for any complimentary setup of the kernel.
-        // builder.Services.AddKernelSetupHook(customHook);
+        builder.Services.AddKernelSetupHook(RegisterPluginsAsync);
 
         return builder;
     }
@@ -141,12 +142,15 @@ internal static class SemanticKernelExtensions
         // Http plugin
         kernel.ImportPluginFromObject(new HttpPlugin(sp.GetRequiredService<HttpClient>()), nameof(HttpPlugin));
 
+        // Register SummarizeData plugin
+        kernel.ImportPluginFromObject(new SummarizeData(), nameof(SummarizeData));
+
         // Register DataApi Plugin
-        var dataApiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
-        kernel.ImportPluginFromOpenApiAsync(
-            pluginName: "DataApiPlugin",
-            uri: new Uri(dataApiOptions.SwaggerDocUrl)
-        );
+        // var dataApiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
+        // kernel.ImportPluginFromOpenApiAsync(
+        //     pluginName: "DataApiPlugin",
+        //     uri: new Uri(dataApiOptions.SwaggerDocUrl)
+        // );
 
         return Task.CompletedTask;
     }
