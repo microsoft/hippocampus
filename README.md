@@ -14,7 +14,7 @@ References:
 
 Utilize the quick-start instructions to run the Chat Copilot Sample Application this project is built on found on the official Chat CoPilot Microsoft Learn [getting started](https://learn.microsoft.com/semantic-kernel/chat-copilot/getting-started) page.
 
-> A copy of these instructions published at the time of cloning can be found [here](/docs/ChatCoPilotQuickStart_May2024.md) in the event that the official getting started page gets signficant updates after the creation of this project.
+> A copy of these instructions published at the time of cloning can be found [here](/docs/ChatCoPilotQuickStart_May2024.md) in the event that the official getting started page gets significant updates after the creation of this project.
 
 In short, the instructions should help you to:
 
