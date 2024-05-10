@@ -127,7 +127,7 @@ internal static class SemanticKernelExtensions
     /// <summary>
     /// Register functions with the main kernel responsible for handling Chat Copilot requests.
     /// </summary>
-    private static Task RegisterChatCopilotFunctionsAsync(IServiceProvider sp, Kernel kernel)
+    private static async Task RegisterChatCopilotFunctionsAsync(IServiceProvider sp, Kernel kernel)
     {
         // Chat Copilot functions
         kernel.RegisterChatPlugin(sp);
@@ -135,10 +135,20 @@ internal static class SemanticKernelExtensions
         // Time plugin
         kernel.ImportPluginFromObject(new TimePlugin(), nameof(TimePlugin));
 
+        // Math plugin
+        kernel.ImportPluginFromObject(new MathPlugin(), nameof(MathPlugin));
+
         // Http plugin
         kernel.ImportPluginFromObject(new HttpPlugin(sp.GetRequiredService<HttpClient>()), nameof(HttpPlugin));
 
-        return Task.CompletedTask;
+        // Register DataApi Plugin
+        var dataApiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
+        await kernel.ImportPluginFromOpenApiAsync(
+            pluginName: "DataApiPlugin",
+            uri: new Uri(dataApiOptions.SwaggerDocUrl)
+        );
+
+        //return Task.CompletedTask;
     }
 
     /// <summary>
@@ -198,14 +208,6 @@ internal static class SemanticKernelExtensions
                 }
             }
         }
-
-        // Register DataApi Plugin
-        var dataApiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
-        await kernel.ImportPluginFromOpenApiAsync(
-            pluginName: "DataApiPlugin",
-            uri: new Uri(dataApiOptions.SwaggerDocUrl)
-        );
-
         //return Task.CompletedTask;
     }
 
