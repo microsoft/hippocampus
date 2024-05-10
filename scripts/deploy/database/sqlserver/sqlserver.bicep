@@ -5,6 +5,8 @@ param tags object = {}
 param databaseName string
 param sqlAdmin string = 'sqlAdmin'
 param managedIdentityName string
+param principalId string
+param tenantId string
 
 @secure()
 param sqlAdminPassword string
@@ -18,7 +20,13 @@ resource sqlServer 'Microsoft.Sql/servers@2023-08-01-preview' = {
     minimalTlsVersion: '1.2'
     publicNetworkAccess: 'Enabled'
     administratorLogin: sqlAdmin
-    administratorLoginPassword: sqlAdminPassword
+    administratorLoginPassword: sqlAdminPassword    
+    administrators: {
+      administratorType: 'ActiveDirectory'
+      login: principalId
+      sid: principalId 
+      tenantId: tenantId
+      }
   }
 
   resource database 'databases' = {

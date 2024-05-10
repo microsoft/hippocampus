@@ -24,7 +24,7 @@ param webApiPackageUri string = 'https://aka.ms/copilotchat/webapi/latest'
 param aiService string = 'AzureOpenAI'
 
 @description('Model to use for chat completions')
-param completionModel string = 'gpt-35-turbo'
+param completionModel string = 'gpt-35-turbo-16k'
 
 @description('Model to use for text embeddings')
 param embeddingModel string = 'text-embedding-ada-002'
@@ -220,7 +220,7 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
         }
         {
           name: 'Kestrel:Endpoints:Https:Url'
-          value: 'https://localhost:443'
+          value: 'https://localhost:443' 
         }
         {
           name: 'Frontend:AadClientId'
@@ -366,6 +366,10 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
           name: 'KernelMemory:Services:OpenAI:APIKey'
           value: aiApiKey
         }
+        {
+          name: 'DataApi:SwaggerDocUrl'
+          value: 'https://app-${uniqueName}-dataapi.azurewebsites.net/swagger/index.html'
+        }
       ],
       []
     )
@@ -403,9 +407,6 @@ resource dataapiService 'Microsoft.Web/sites@2023-01-01' = {
   properties: {
     serverFarmId: dataapiServicePlan.id
     httpsOnly: true
-    siteConfig: {
-      healthCheckPath: '/healthz'
-    }
   }
 }
 
@@ -422,7 +423,7 @@ resource dataapiServiceConfig 'Microsoft.Web/sites/config@2022-09-01' = {
     appSettings: [
       {
         name: 'ServerBaseUrl'
-        value: dataapiService.properties.defaultHostName
+        value: 'https://${dataapiService.properties.defaultHostName}'
       }
     ]
     connectionStrings: [
@@ -443,6 +444,8 @@ module salesData 'database/sqlserver/sqlserver.bicep' = {
     name: 'SalesData-${uniqueName}-sql'
     sqlAdminPassword: sqlAdminUserPassword
     managedIdentityName: dataapiService.name
+    principalId: dataapiService.identity.principalId
+    tenantId: dataapiService.identity.tenantId
   }
 }
 
