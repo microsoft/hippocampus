@@ -1,0 +1,77 @@
+<mxfile host="Electron" modified="2024-05-10T18:03:00.374Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.2.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="gz1W3vmmqMlm5rrgHF7y" version="24.2.5" type="device" pages="2">
+  <diagram name="Page-1" id="gZlUtXruDb-HUIPytSuz">
+    <mxGraphModel dx="1083" dy="617" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IF0l8zeuil7Z0QwVMFTy-1" target="IF0l8zeuil7Z0QwVMFTy-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-7" value="Prompt" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="IF0l8zeuil7Z0QwVMFTy-3">
+          <mxGeometry x="0.1838" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-1" value="Sales User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IF0l8zeuil7Z0QwVMFTy-2" target="IF0l8zeuil7Z0QwVMFTy-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-2" value="Chat Website" style="verticalLabelPosition=top;html=1;verticalAlign=bottom;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.website_generic;pointerEvents=1;labelPosition=center;" vertex="1" parent="1">
+          <mxGeometry x="170" y="89.38" width="90" height="81.25" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IF0l8zeuil7Z0QwVMFTy-4" target="IF0l8zeuil7Z0QwVMFTy-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-4" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.azure_sdk;" vertex="1" parent="1">
+          <mxGeometry x="190" y="240" width="50" height="47.5" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IF0l8zeuil7Z0QwVMFTy-6" target="IF0l8zeuil7Z0QwVMFTy-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-6" value="Semantic Kernel" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="280" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IF0l8zeuil7Z0QwVMFTy-8" target="IF0l8zeuil7Z0QwVMFTy-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-8" value="OpenAPI Plugin&amp;nbsp;&lt;div&gt;to DataApi&lt;/div&gt;" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.android;fillColor=#115193;gradientColor=none;" vertex="1" parent="1">
+          <mxGeometry x="300" y="221.75" width="73.5" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-9" value="Azure OpenAI" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=data:image/svg+xml,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOCAxOCIgaGVpZ2h0PSIxOCIgd2lkdGg9IjE4IiBpZD0idXVpZC1hZGJkYWU4ZS01YTQxLTQ2ZDEtOGMxOC1hYTczY2RiZmVlMzIiPjxkZWZzPjxyYWRpYWxHcmFkaWVudCBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSgtMTc5MzkuMDMgMjAzNjguMDI5KSByb3RhdGUoNDUpIHNjYWxlKDI1LjA5MSAtMzQuMTQ5KSIgcj0iLjQ1IiBjeT0iNzkzLjE5OSIgY3g9Ii02Ny45ODEiIGlkPSJ1dWlkLTJhNzQwN2FhLWI3ODctNDhkZC1hOTZhLTBkODFhYjZlOTNiYiI+PHN0b3Agc3RvcC1jb2xvcj0iIzgzYjlmOSIgb2Zmc2V0PSIwIi8+PHN0b3Agc3RvcC1jb2xvcj0iIzAwNzhkNCIgb2Zmc2V0PSIxIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHBhdGggc3Ryb2tlLXdpZHRoPSIwIiBmaWxsPSJ1cmwoI3V1aWQtMmE3NDA3YWEtYjc4Ny00OGRkLWE5NmEtMGQ4MWFiNmU5M2JiKSIgZD0ibTAsMi43djEyLjZjMCwxLjQ5MSwxLjIwOSwyLjcsMi43LDIuN2gxMi42YzEuNDkxLDAsMi43LTEuMjA5LDIuNy0yLjdWMi43YzAtMS40OTEtMS4yMDktMi43LTIuNy0yLjdIMi43QzEuMjA5LDAsMCwxLjIwOSwwLDIuN1pNMTAuOCwwdjMuNmMwLDMuOTc2LDMuMjI0LDcuMiw3LjIsNy4yaC0zLjZjLTMuOTc2LDAtNy4xOTksMy4yMjItNy4yLDcuMTk4di0zLjU5OGMwLTMuOTc2LTMuMjI0LTcuMi03LjItNy4yaDMuNmMzLjk3NiwwLDcuMi0zLjIyNCw3LjItNy4yWiIvPjwvc3ZnPg==;" vertex="1" parent="1">
+          <mxGeometry x="185" y="360" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IF0l8zeuil7Z0QwVMFTy-12" value="SalesDb" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/database_server.svg;" vertex="1" parent="1">
+          <mxGeometry x="440" y="229.63" width="55.97" height="68.25" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="d6OoRYj6ryleezYHHOLS" name="Page-2">
+    <mxGraphModel dx="1570" dy="894" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="SvvT7uCOzWCP-esKtQNJ-1" value="" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;" vertex="1" parent="1">
+          <mxGeometry x="30" y="20" width="20" height="860" as="geometry" />
+        </mxCell>
+        <mxCell id="SvvT7uCOzWCP-esKtQNJ-2" value="Chat WebApp" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="140" y="20" width="100" height="850" as="geometry" />
+        </mxCell>
+        <mxCell id="SvvT7uCOzWCP-esKtQNJ-3" value="Azure OpenAI" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="340" y="20" width="100" height="850" as="geometry" />
+        </mxCell>
+        <mxCell id="SvvT7uCOzWCP-esKtQNJ-4" value="DataApi" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="530" y="20" width="100" height="850" as="geometry" />
+        </mxCell>
+        <mxCell id="SvvT7uCOzWCP-esKtQNJ-5" value="Request" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" edge="1" parent="1" target="SvvT7uCOzWCP-esKtQNJ-2">
+          <mxGeometry width="60" relative="1" as="geometry">
+            <mxPoint x="40" y="110" as="sourcePoint" />
+            <mxPoint x="100" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

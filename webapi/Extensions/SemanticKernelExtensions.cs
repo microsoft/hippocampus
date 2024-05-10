@@ -67,7 +67,7 @@ internal static class SemanticKernelExtensions
 
         // Register plugins
         builder.Services.AddScoped<RegisterFunctionsWithKernel>(sp => RegisterChatCopilotFunctionsAsync);
-        builder.Services.AddScoped<KernelSetupHook>(sp => RegisterPluginsAsync);
+        //builder.Services.AddScoped<KernelSetupHook>(sp => RegisterPluginsAsync);
 
         // Add any additional setup needed for the kernel.
         // Uncomment the following line and pass in a custom hook for any complimentary setup of the kernel.
@@ -135,8 +135,18 @@ internal static class SemanticKernelExtensions
         // Time plugin
         kernel.ImportPluginFromObject(new TimePlugin(), nameof(TimePlugin));
 
+        // Math plugin
+        kernel.ImportPluginFromObject(new MathPlugin(), nameof(MathPlugin));
+
         // Http plugin
         kernel.ImportPluginFromObject(new HttpPlugin(sp.GetRequiredService<HttpClient>()), nameof(HttpPlugin));
+
+        // Register DataApi Plugin
+        var dataApiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
+        kernel.ImportPluginFromOpenApiAsync(
+            pluginName: "DataApiPlugin",
+            uri: new Uri(dataApiOptions.SwaggerDocUrl)
+        );
 
         return Task.CompletedTask;
     }
@@ -144,7 +154,7 @@ internal static class SemanticKernelExtensions
     /// <summary>
     /// Register plugins with a given kernel.
     /// </summary>
-    private static async Task RegisterPluginsAsync(IServiceProvider sp, Kernel kernel)
+    private static Task RegisterPluginsAsync(IServiceProvider sp, Kernel kernel)
     {
         var logger = kernel.LoggerFactory.CreateLogger(nameof(Kernel));
 
@@ -199,14 +209,7 @@ internal static class SemanticKernelExtensions
             }
         }
 
-        // Register DataApi Plugin
-        var dataApiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
-        await kernel.ImportPluginFromOpenApiAsync(
-            pluginName: "DataApiPlugin",
-            uri: new Uri(dataApiOptions.SwaggerDocUrl)
-        );
-
-        //return Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     /// <summary>
