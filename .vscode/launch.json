@@ -1,7 +1,18 @@
 {
     "version": "0.2.0",
     "configurations": [
-        
+        {
+            "name": "Debug DataApi",
+            "type": "coreclr",
+            "preLaunchTask": "build (DataApi)",
+            "request": "launch",
+            "program": "${workspaceFolder}/dataapi/bin/Debug/net8.0/dataapi.dll",
+            "cwd": "${workspaceFolder}/dataapi",
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:7115"
+            },
+        },       
         {
             "name": "Debug CopilotChatWebApi",
             "type": "coreclr",

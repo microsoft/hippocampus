@@ -1,6 +1,51 @@
 {
     "version": "2.0.0",
     "tasks": [
+        // DataApi
+        {
+            "label": "build (DataApi)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/dataapi/DataApi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/property:DebugType=portable"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "run (DataApi)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/dataapi/DataApi.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "group": "copilot"
+            }
+        },
+        {
+            "label": "watch (DataApi)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/dataaoi/DataApi.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
         // Copilot Chat
         {
             "label": "run (Copilot Chat)",
