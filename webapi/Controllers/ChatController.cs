@@ -222,6 +222,12 @@ public class ChatController : ControllerBase, IDisposable
             tasks.AddRange(this.RegisterCustomPlugins(kernel, customPluginsString, authHeaders));
         }
 
+        // load dataapi plugin
+        await kernel.ImportPluginFromOpenApiAsync(
+            pluginName: "DataApiPlugin",
+            uri: new Uri(this._dataApiOptions.SwaggerDocUrl)
+        );
+
         await Task.WhenAll(tasks);
     }
 

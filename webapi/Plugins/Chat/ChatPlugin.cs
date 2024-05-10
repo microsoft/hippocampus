@@ -209,7 +209,6 @@ public class ChatPlugin
 
         // Clone the context to avoid modifying the original context variables.
         KernelArguments chatContext = new(context);
-        chatContext["knowledgeCutoff"] = this._promptOptions.KnowledgeCutoffDate;
 
         CopilotChatMessage chatMessage = await this.GetChatResponseAsync(chatId, userId, chatContext, newUserMessage, cancellationToken);
         context["input"] = chatMessage.Content;
@@ -422,7 +421,6 @@ public class ChatPlugin
             );
 
         intentContext["tokenLimit"] = tokenBudget.ToString(new NumberFormatInfo());
-        intentContext["knowledgeCutoff"] = this._promptOptions.KnowledgeCutoffDate;
 
         var completionFunction = this._kernel.CreateFunctionFromPrompt(
             this._promptOptions.SystemIntentExtraction,
