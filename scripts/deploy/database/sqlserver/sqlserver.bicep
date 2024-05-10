@@ -21,12 +21,12 @@ resource sqlServer 'Microsoft.Sql/servers@2023-08-01-preview' = {
     publicNetworkAccess: 'Enabled'
     administratorLogin: sqlAdmin
     administratorLoginPassword: sqlAdminPassword    
-    administrators: {
-      administratorType: 'ActiveDirectory'
-      login: principalId
-      sid: principalId 
-      tenantId: tenantId
-      }
+    // administrators: {
+    //   administratorType: 'ActiveDirectory'
+    //   login: principalId
+    //   sid: principalId 
+    //   tenantId: tenantId
+    //   }
   }
 
   resource database 'databases' = {
