@@ -253,10 +253,11 @@ public class ChatPlugin
         }
 
         // Extract user intent from the conversation history.
-        await this.UpdateBotResponseStatusOnClientAsync(chatId, "Extracting user intent", cancellationToken);
-        var userIntent = await AsyncUtils.SafeInvokeAsync(
-            () => this.GetUserIntentAsync(chatContext, cancellationToken), nameof(GetUserIntentAsync));
-        metaPrompt.AddSystemMessage(userIntent);
+        // await this.UpdateBotResponseStatusOnClientAsync(chatId, "Extracting user intent", cancellationToken);
+        var userIntent = userMessage.Content;
+        // var userIntent = await AsyncUtils.SafeInvokeAsync(
+        //     () => this.GetUserIntentAsync(chatContext, cancellationToken), nameof(GetUserIntentAsync));
+        // metaPrompt.AddSystemMessage(userIntent);
 
         // Calculate max amount of tokens to use for memories
         int maxRequestTokenBudget = this.GetMaxRequestTokenBudget();
