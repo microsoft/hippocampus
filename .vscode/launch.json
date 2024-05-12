@@ -10,7 +10,7 @@
             "cwd": "${workspaceFolder}/dataapi",
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:7115"
+                "ASPNETCORE_URLS": "https://localhost:7115"
             },
         },       
         {
