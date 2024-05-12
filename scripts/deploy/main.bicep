@@ -367,7 +367,16 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
           value: aiApiKey
         }
       ],
-      []
+      [
+        {
+          name: 'DataApi:BaseUrl'
+          value: dataapiService.properties.defaultHostName
+        }
+        {
+          name: 'DataApi:SwaggerDocUrl'
+          value: '${dataapiService.properties.defaultHostName}/swagger/v1/swagger.json'
+        }
+      ]
     )
   }
 }

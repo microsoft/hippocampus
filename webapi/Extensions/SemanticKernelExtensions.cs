@@ -22,7 +22,6 @@ using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Core;
 using CopilotChat.WebApi.Plugins;
-using Microsoft.SemanticKernel.Plugins.OpenApi;
 
 namespace CopilotChat.WebApi.Extensions;
 
@@ -145,13 +144,6 @@ internal static class SemanticKernelExtensions
         // Register SummarizeData plugin
         kernel.ImportPluginFromObject(new SummarizeData(), nameof(SummarizeData));
 
-        // Register DataApi Plugin
-        // var dataApiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
-        // kernel.ImportPluginFromOpenApiAsync(
-        //     pluginName: "DataApiPlugin",
-        //     uri: new Uri(dataApiOptions.SwaggerDocUrl)
-        // );
-
         return Task.CompletedTask;
     }
 
@@ -164,6 +156,8 @@ internal static class SemanticKernelExtensions
 
         // Semantic plugins
         ServiceOptions options = sp.GetRequiredService<IOptions<ServiceOptions>>().Value;
+        DataApiOptions apiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
+        HttpClient httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
         if (!string.IsNullOrWhiteSpace(options.SemanticPluginsDirectory))
         {
             foreach (string subDir in Directory.GetDirectories(options.SemanticPluginsDirectory))
@@ -212,6 +206,10 @@ internal static class SemanticKernelExtensions
                 }
             }
         }
+
+        // load the DataApi plugin
+        httpClient.BaseAddress = new Uri(apiOptions.BaseUrl);
+        kernel.ImportPluginFromObject(new DataApiPlugin(httpClient), nameof(DataApiPlugin));
 
         return Task.CompletedTask;
     }
