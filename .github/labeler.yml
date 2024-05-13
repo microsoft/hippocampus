@@ -8,6 +8,11 @@ webapi:
   - changed-files:
       - any-glob-to-any-file: ["webapi/**"]
 
+# Add 'dataapi' label to any change within the 'dataapi' directory
+dataapi:
+  - changed-files:
+      - any-glob-to-any-file: ["dataapi/**"]
+
 # Add 'dependencies' label to any change of the 'webapp/yarn.lock' file
 dependencies:
   - changed-files:
