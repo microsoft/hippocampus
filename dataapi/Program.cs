@@ -62,6 +62,12 @@ app.MapGet("/assets",
     return o;
 });
 
+// GET /assets/count - Get the count of all assets
+app.MapGet("/assets/count", (SalesDb db) => db.Assets.Count())
+    .WithName("GetAssetCount")
+    .WithSummary("Get the count of all assets")
+    .WithOpenApi();
+
 // GET /assets/{accountNumber} - Get an asset by account number
 app.MapGet("/assets/{accountNumber}", (string accountNumber, SalesDb db) =>
     db.Assets.FirstOrDefault(a => a.AccountNumber.Equals(accountNumber)))

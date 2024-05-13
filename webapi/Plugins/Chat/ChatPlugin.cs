@@ -209,7 +209,6 @@ public class ChatPlugin
 
         // Clone the context to avoid modifying the original context variables.
         KernelArguments chatContext = new(context);
-        chatContext["knowledgeCutoff"] = this._promptOptions.KnowledgeCutoffDate;
 
         CopilotChatMessage chatMessage = await this.GetChatResponseAsync(chatId, userId, chatContext, newUserMessage, cancellationToken);
         context["input"] = chatMessage.Content;
@@ -254,10 +253,11 @@ public class ChatPlugin
         }
 
         // Extract user intent from the conversation history.
-        await this.UpdateBotResponseStatusOnClientAsync(chatId, "Extracting user intent", cancellationToken);
-        var userIntent = await AsyncUtils.SafeInvokeAsync(
-            () => this.GetUserIntentAsync(chatContext, cancellationToken), nameof(GetUserIntentAsync));
-        metaPrompt.AddSystemMessage(userIntent);
+        // await this.UpdateBotResponseStatusOnClientAsync(chatId, "Extracting user intent", cancellationToken);
+        var userIntent = userMessage.Content;
+        // var userIntent = await AsyncUtils.SafeInvokeAsync(
+        //     () => this.GetUserIntentAsync(chatContext, cancellationToken), nameof(GetUserIntentAsync));
+        // metaPrompt.AddSystemMessage(userIntent);
 
         // Calculate max amount of tokens to use for memories
         int maxRequestTokenBudget = this.GetMaxRequestTokenBudget();
@@ -422,7 +422,6 @@ public class ChatPlugin
             );
 
         intentContext["tokenLimit"] = tokenBudget.ToString(new NumberFormatInfo());
-        intentContext["knowledgeCutoff"] = this._promptOptions.KnowledgeCutoffDate;
 
         var completionFunction = this._kernel.CreateFunctionFromPrompt(
             this._promptOptions.SystemIntentExtraction,
