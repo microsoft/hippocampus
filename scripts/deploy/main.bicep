@@ -370,11 +370,11 @@ resource appServiceWebConfig 'Microsoft.Web/sites/config@2022-09-01' = {
       [
         {
           name: 'DataApi:BaseUrl'
-          value: dataapiService.properties.defaultHostName
+          value: 'https://${dataapiService.properties.defaultHostName}'
         }
         {
           name: 'DataApi:SwaggerDocUrl'
-          value: '${dataapiService.properties.defaultHostName}/swagger/v1/swagger.json'
+          value: 'https://${dataapiService.properties.defaultHostName}/swagger/v1/swagger.json'
         }
       ]
     )
