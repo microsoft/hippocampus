@@ -142,7 +142,7 @@ internal static class SemanticKernelExtensions
         kernel.ImportPluginFromObject(new HttpPlugin(sp.GetRequiredService<HttpClient>()), nameof(HttpPlugin));
 
         // Register SummarizeData plugin
-        kernel.ImportPluginFromObject(new SummarizeData(), nameof(SummarizeData));
+        //kernel.ImportPluginFromObject(new SummarizeData(), nameof(SummarizeData));
 
         return Task.CompletedTask;
     }
