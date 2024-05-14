@@ -50,7 +50,6 @@ public class PromptsOptions
     internal float DocumentMemoryMinRelevance { get; } = 0.8F;
 
     // System
-    [Required, NotEmptyOrWhitespace] public string KnowledgeCutoffDate { get; set; } = string.Empty;
     [Required, NotEmptyOrWhitespace] public string InitialBotMessage { get; set; } = string.Empty;
     [Required, NotEmptyOrWhitespace] public string SystemDescription { get; set; } = string.Empty;
     [Required, NotEmptyOrWhitespace] public string SystemResponse { get; set; } = string.Empty;

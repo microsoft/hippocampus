@@ -82,7 +82,6 @@ internal static class SemanticChatMemoryExtractor
             memoryExtractionArguments["tokenLimit"] = remainingToken.ToString(new NumberFormatInfo());
             memoryExtractionArguments["memoryName"] = memoryName;
             memoryExtractionArguments["format"] = options.MemoryFormat;
-            memoryExtractionArguments["knowledgeCutoff"] = options.KnowledgeCutoffDate;
 
             var completionFunction = kernel.CreateFunctionFromPrompt(memoryPrompt);
             var result = await completionFunction.InvokeAsync(

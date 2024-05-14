@@ -21,7 +21,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Core;
-using Microsoft.SemanticKernel.Plugins.OpenApi;
+using CopilotChat.WebApi.Plugins;
 
 namespace CopilotChat.WebApi.Extensions;
 
@@ -67,11 +67,11 @@ internal static class SemanticKernelExtensions
 
         // Register plugins
         builder.Services.AddScoped<RegisterFunctionsWithKernel>(sp => RegisterChatCopilotFunctionsAsync);
-        builder.Services.AddScoped<KernelSetupHook>(sp => RegisterPluginsAsync);
+        //builder.Services.AddScoped<KernelSetupHook>(sp => RegisterPluginsAsync);
 
         // Add any additional setup needed for the kernel.
         // Uncomment the following line and pass in a custom hook for any complimentary setup of the kernel.
-        // builder.Services.AddKernelSetupHook(customHook);
+        builder.Services.AddKernelSetupHook(RegisterPluginsAsync);
 
         return builder;
     }
@@ -135,8 +135,14 @@ internal static class SemanticKernelExtensions
         // Time plugin
         kernel.ImportPluginFromObject(new TimePlugin(), nameof(TimePlugin));
 
+        // Math plugin
+        kernel.ImportPluginFromObject(new MathPlugin(), nameof(MathPlugin));
+
         // Http plugin
         kernel.ImportPluginFromObject(new HttpPlugin(sp.GetRequiredService<HttpClient>()), nameof(HttpPlugin));
+
+        // Register SummarizeData plugin
+        //kernel.ImportPluginFromObject(new SummarizeData(), nameof(SummarizeData));
 
         return Task.CompletedTask;
     }
@@ -144,12 +150,14 @@ internal static class SemanticKernelExtensions
     /// <summary>
     /// Register plugins with a given kernel.
     /// </summary>
-    private static async Task RegisterPluginsAsync(IServiceProvider sp, Kernel kernel)
+    private static Task RegisterPluginsAsync(IServiceProvider sp, Kernel kernel)
     {
         var logger = kernel.LoggerFactory.CreateLogger(nameof(Kernel));
 
         // Semantic plugins
         ServiceOptions options = sp.GetRequiredService<IOptions<ServiceOptions>>().Value;
+        DataApiOptions apiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
+        HttpClient httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
         if (!string.IsNullOrWhiteSpace(options.SemanticPluginsDirectory))
         {
             foreach (string subDir in Directory.GetDirectories(options.SemanticPluginsDirectory))
@@ -199,14 +207,11 @@ internal static class SemanticKernelExtensions
             }
         }
 
-        // Register DataApi Plugin
-        var dataApiOptions = sp.GetRequiredService<IOptions<DataApiOptions>>().Value;
-        await kernel.ImportPluginFromOpenApiAsync(
-            pluginName: "DataApiPlugin",
-            uri: new Uri(dataApiOptions.SwaggerDocUrl)
-        );
+        // load the DataApi plugin
+        httpClient.BaseAddress = new Uri(apiOptions.BaseUrl);
+        kernel.ImportPluginFromObject(new DataApiPlugin(httpClient), nameof(DataApiPlugin));
 
-        //return Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     /// <summary>
