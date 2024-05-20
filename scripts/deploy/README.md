@@ -1,9 +1,10 @@
-# Deploying Chat Copilot
+# Deploying this Chat CoPilot application to Azure
 
-This document details how to deploy Chat Copilot's required resources to your Azure subscription.
+This document details how to deploy this project's required resources to your Azure subscription. 
 
 ## Things to know
 
+- This documentation is based on the [original deployment instructions](https://github.com/microsoft/chat-copilot/blob/main/scripts/deploy/README.md) for the reference Chat CoPilot application, which has been customized and extended in this project. For more information about additional deployment and configuration options for the Chat CoPilot application, see the original [Chat CoPilot GitHub repository](https://github.com/microsoft/chat-copilot).
 - Access to Azure OpenAI is currently limited as we navigate high demand, upcoming product improvements, and Microsoft’s commitment to responsible AI.
   For more details and information on applying for access, go [here](https://learn.microsoft.com/azure/cognitive-services/openai/overview?ocid=AID3051475#how-do-i-get-access-to-azure-openai).
   For regional availability of Azure OpenAI, see the [availability map](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?products=cognitive-services).
@@ -21,7 +22,6 @@ Before you get started, make sure you have the following requirements in place:
 - Azure CLI (i.e., az) (if you already installed Azure CLI, make sure to update your installation to the latest version)
   - Windows, go to https://aka.ms/installazurecliwindows
   - Linux, run "`curl -L https://aka.ms/InstallAzureCli | bash`"
-- (Linux only) `zip` can be installed by running "`sudo apt install zip`"
 
 ## App registrations (identity)
 
@@ -100,37 +100,21 @@ The examples below assume you are using an existing Azure OpenAI resource. See t
 ## PowerShell
 
 ```powershell
-./deploy-azure.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -DeploymentName {YOUR_DEPLOYMENT_NAME} -AIService {AzureOpenAI or OpenAI} -AIApiKey {YOUR_AI_KEY} -AIEndpoint {YOUR_AZURE_OPENAI_ENDPOINT} -BackendClientId {YOUR_BACKEND_APPLICATION_ID} -FrontendClientId {YOUR_FRONTEND_APPLICATION_ID} -TenantId {YOUR_TENANT_ID}
+./deploy-azure.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -DeploymentName {YOUR_DEPLOYMENT_NAME} -AIService AzureOpenAI -AIApiKey {YOUR_AI_KEY} -AIEndpoint {YOUR_AZURE_OPENAI_ENDPOINT} -BackendClientId {YOUR_BACKEND_APPLICATION_ID} -FrontendClientId {YOUR_FRONTEND_APPLICATION_ID} -TenantId {YOUR_TENANT_ID}
 ```
 
+- Choose a `-DeploymentName` that is meaningful to you.
+   - Used as a prefix for deployed resources
+   - Used when deploying packaged code to the web services in future steps
 - To use an existing Azure OpenAI resource, set `-AIService` to `AzureOpenAI` and include `-AIApiKey` and `-AIEndpoint`.
-- To deploy a new Azure OpenAI resource, set `-AIService` to `AzureOpenAI` and omit `-AIApiKey` and `-AIEndpoint`.
+- To deploy a new Azure OpenAI resource, omit `-AIApiKey` and `-AIEndpoint`.
 - To use an an OpenAI account, set `-AIService` to `OpenAI` and include `-AIApiKey`.
 
-## Bash
+The following resources will be deployed in your resource group:
 
-```bash
-chmod +x ./deploy-azure.sh
-./deploy-azure.sh --subscription {YOUR_SUBSCRIPTION_ID} --deployment-name {YOUR_DEPLOYMENT_NAME} --ai-service {AzureOpenAI or OpenAI} --ai-service-key {YOUR_AI_KEY} --ai-endpoint {YOUR_AZURE_OPENAI_ENDPOINT} --client-id {YOUR_BACKEND_APPLICATION_ID} --frontend-client-id {YOUR_FRONTEND_APPLICATION_ID} --tenant-id {YOUR_TENANT_ID}
-```
+# Deploy Application and DataAPI
 
-- To use an existing Azure OpenAI resource, set `--ai-service` to `AzureOpenAI` and include `--ai-service-key` and `--ai-endpoint`.
-- To deploy a new Azure OpenAI resource, set `--ai-service` to `AzureOpenAI` and omit `--ai-service-key` and `--ai-endpoint`.
-- To use an an OpenAI account, set `--ai-service` to `OpenAI` and include `--ai-service-key`.
-
-## Azure Portal
-
-You can also deploy the infrastructure directly from the Azure Portal by clicking the button below:
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-existing-azureopenai-portal)
-
-> This will automatically deploy the most recent release of Chat Copilot binaries ([link](https://github.com/microsoft/chat-copilot/releases)).
-
-> To find the deployment name when using `Deploy to Azure`, look for a deployment in your resource group that starts with `Microsoft.Template`.
-
-# Deploy Application
-
-To deploy the application, first package it, then deploy it to the Azure resources created above.
+To deploy theWebAPI and DataAPI applications, first package them, then deploy them to the Azure App Service created above.
 
 ## PowerShell
 
@@ -140,71 +124,11 @@ To deploy the application, first package it, then deploy it to the Azure resourc
 ./deploy-webapi.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -ResourceGroupName {YOUR_RESOURCE_GROUP_NAME} -DeploymentName {YOUR_DEPLOYMENT_NAME}
 ```
 
-## Bash
-
-```bash
-chmod +x ./package-webapi.sh
-./package-webapi.sh
-
-chmod +x ./deploy-webapi.sh
-./deploy-webapi.sh --subscription {YOUR_SUBSCRIPTION_ID} --resource-group {YOUR_RESOURCE_GROUP_NAME} --deployment-name {YOUR_DEPLOYMENT_NAME}
-```
-
-# Deploy Hosted Plugins
-
-> **_NOTE:_** This step can be skipped if the required resources for the web searcher plugin are not deployed. The required resources include a Bing resource and an Azure Function. The required resources are NOT deployed by default. To deploy the required resources, use the `-DeployWebSearcherPlugin` or `--deploy-web-searcher-plugin` flag when running the **deploy-azure.ps1/deploy-azure.sh** script.
-
-> **_NOTE:_** This step can be skipped if the previous Azure Resources creation step, including the resources required by the Web Search plugin, succeeded without errors. The `deployPackages = true` setting in main.bicep ensures that the WebSearcher is deployed.
-
-> **_NOTE:_** More hosted plugins will be available.
-
-To deploy the plugins, build the packages first and deploy them to the Azure resources created above.
-
-## PowerShell
-
 ```powershell
-./package-plugins.ps1
+./package-dataapi.ps1
 
-./deploy-plugins.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -ResourceGroupName rg-{YOUR_DEPLOYMENT_NAME} -DeploymentName {YOUR_DEPLOYMENT_NAME}
+./deploy-dataapi.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -ResourceGroupName {YOUR_RESOURCE_GROUP_NAME} -DeploymentName {YOUR_DEPLOYMENT_NAME}
 ```
-
-## Bash
-
-```bash
-chmod +x ./package-plugins.sh
-./package-webapi.sh
-
-chmod +x ./deploy-plugins.sh
-./deploy-webapi.sh --subscription {YOUR_SUBSCRIPTION_ID} --resource-group rg-{YOUR_DEPLOYMENT_NAME} --deployment-name {YOUR_DEPLOYMENT_NAME}
-```
-
-# (Optional) Deploy Memory Pipeline
-
-> **_NOTE:_** This step can be skipped if the WebApi is NOT configured to run asynchronously for document processing. By default, the WebApi is configured to run asynchronously for document processing in deployment.
-
-> **_NOTE:_** This step can be skipped if the previous Azure Resources creation step succeeded without errors. The deployPackages = true setting in main.bicep ensures that the latest Chat Copilot memory pipeline is deployed.
-
-To deploy the memorypipeline, build the deployment package first and deploy it to the Azure resources created above.
-
-## PowerShell
-
-```powershell
-.\package-memorypipeline.ps1
-
-.\deploy-memorypipeline.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -ResourceGroupName {YOUR_RESOURCE_GROUP_NAME} -DeploymentName {YOUR_DEPLOYMENT_NAME}
-```
-
-## Bash
-
-```bash
-chmod +x ./package-memorypipeline.sh
-./package-memorypipeline.sh
-
-chmod +x ./deploy-memorypipeline.sh
-./deploy-memorypipeline.sh --subscription {YOUR_SUBSCRIPTION_ID} --resource-group {YOUR_RESOURCE_GROUP_NAME} --deployment-name {YOUR_DEPLOYMENT_NAME}
-```
-
-Your Chat Copilot application is now deployed!
 
 # Appendix
 
@@ -221,12 +145,4 @@ This will get you to the CORS page where you can add your allowed hosts.
 $webApiName = $(az deployment group show --name {DEPLOYMENT_NAME} --resource-group {YOUR_RESOURCE_GROUP_NAME} --output json | ConvertFrom-Json).properties.outputs.webapiName.value
 
 az webapp cors add --name $webapiName --resource-group $ResourceGroupName --subscription $Subscription --allowed-origins YOUR_FRONTEND_URL
-```
-
-### Bash
-
-```bash
-eval WEB_API_NAME=$(az deployment group show --name $DEPLOYMENT_NAME --resource-group $RESOURCE_GROUP --output json) | jq -r '.properties.outputs.webapiName.value'
-
-az webapp cors add --name $WEB_API_NAME --resource-group $RESOURCE_GROUP --subscription $SUBSCRIPTION --allowed-origins YOUR_FRONTEND_URL
 ```

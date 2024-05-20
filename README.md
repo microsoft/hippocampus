@@ -10,7 +10,7 @@ This project utilizes the [Chat Copilot Sample Application](https://github.com/m
 This project adds the following additional components: 
 
 * [DataAPI](./dataapi/) - OpenAPI endpoint registered with the Semantic Kernel agent as an additional plugin that can be used by the LLM to answer questions about customer data. The DataApi is modeled after a few data sets from a Customer Relationship Management (CRM) system containing customer asset and and sales data, but could easily replaced with any OpenAPI with a well documented swagger definition.
-* [SQL Server](./scripts/deploy/database/sqlserver/) - deployment templates and scripts for a backend database with sample data exposed via the DataAPI
+* [SQL Database](./scripts/deploy/database/sqlserver/) - deployment templates and scripts for an Azure SQL backend database with sample data exposed via the DataAPI.
 
 # Architecture
 This open-source sample application is intended for use as an education tool or solution accelerator. The deployment scripts included will deploy the below basic infrastructure, where the CosmosDB is an optional component for persisting chat session history. 
@@ -25,17 +25,17 @@ This project includes .NET Web Services and utilizes the Semantic Kernel SDK for
 
 ## Logical Flow
 
-Below describes the basical logical flow for each chat turn in a session:
+Below describes the basic logical flow for each chat turn in a session:
 
-1. The user asks a question of CoPilot in the chat window
-2. This question along with other session information is sent to the backend WebAPI
-3. The Chat controller assembles the below, and uses a Semantic Kernel instance to send to the OpenAI LLM
+1. The user asks a question of CoPilot in the chat window.
+2. This question along with other session information is sent to the backend WebAPI.
+3. The Chat controller assembles the below, and uses a Semantic Kernel instance to send to the OpenAI LLM.
     * User intent (question)
     * All chat history from the session
     * A list of all available Kernel Functions available to help answer the question (including the DataAPI functions) with descriptions
     * A Prompt to instruct the model on the expected response based on data and logic available in the Functions
-4. The model then instructs Semantic Kernel which functions to execute in order, to retrieve data needed to answer the question. This is using an OpenAI feature called [Function Calling](https://platform.openai.com/docs/guides/function-calling)
-    * In this project, [Automatic Function Calling](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/using-the-kernelfunction-decorator?tabs=Csharp#allow-the-ai-to-automatically-call-your-function) has been enabled in the Kernel so that these instructions are carried out without a human-in-the-loop intervention required. 
+4. The model then instructs Semantic Kernel which functions to execute in order, to retrieve data needed to answer the question. This is using an OpenAI feature called [Function Calling](https://platform.openai.com/docs/guides/function-calling).
+    * In this project, [Automatic Function Calling](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/using-the-kernelfunction-decorator?tabs=Csharp#allow-the-ai-to-automatically-call-your-function) has been enabled in the Kernel so that these instructions are carried out without human-in-the-loop intervention required. 
 5. The Kernel then executes the function calls, including requests to the DataAPI to retrieve the relevant customer data, and sends the results back to the model. This is an example of a [RAG (retrieval augmented generation) Pattern](https://help.openai.com/en/articles/8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts), but with structured data query endpoints rather than a semantic search. 
 6. The model constructs an answer - based on the provided data, prompt and history  context - and sends it back to the Kernel, which is assembled with other response infromation and returned to the front end web app, where the answer is displayed. 
 
@@ -74,10 +74,14 @@ In short, [the instructions](https://learn.microsoft.com/semantic-kernel/chat-co
 
 1. This project adds an additional backend .NET web service that provides the DataAPI endpoint for retrieving the sales data for the LLM to reason over and answer questions. 
     * Requires [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0), which will not currently be installed by the setup scripts referenced by the [getting started](https://learn.microsoft.com/semantic-kernel/chat-copilot/getting-started) instructions.
-    * Has been added to the `Start.ps1` script referenced in the [getting started](https://learn.microsoft.com/semantic-kernel/chat-copilot/getting-started) instructions. No additional steps will be required to build and run the DataAPI. 
+    * Has been added to the [Start.ps1](./scripts/Start.ps1) script referenced in the [getting started](https://learn.microsoft.com/semantic-kernel/chat-copilot/getting-started) instructions. No additional steps will be required to build and run the DataAPI. 
     * DataAPI assumes a backend SQL database for data storage. If running locally without one, DataApi will run and can be called successfully, but no data will be returned.
     * See [DataAPI README](./dataapi/README.md) for more information
-2. The backend WebAPI in this project uses .NET 6 rather than .NET 7 
+2. The backend WebAPI in this project uses .NET 6 rather than .NET 7
+3. Certain 'educational' features and tabs have been disabled in the web app, including:
+    * Plugin setup
+    * Profile setup
+4. The 'Document' tab in the web app, and the ability to upload discrete documents, has not been disabled in the WebApp, but will not be used or visible to the model with the current configuration of Kernel Memory in the WebAPI. 
 
 ## Trademarks
 
