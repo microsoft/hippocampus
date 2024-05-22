@@ -2,7 +2,7 @@
 
 This directory contains the source code for the project's backend web API service. The front end web application component can be found in the [webapp/](../webapp/) directory.
 
-This backend web API is based on the WebAPI included in the [Chat Copilot Sample Application](https://github.com/microsoft/chat-copilot) as a starting point. See the [original web API service README](https://github.com/microsoft/chat-copilot/tree/main/webapi) for more infomration. 
+This backend web API is based on the WebAPI included in the [Chat Copilot Sample Application](https://github.com/microsoft/chat-copilot) as a starting point. See the [original web API service README](https://github.com/microsoft/chat-copilot/tree/main/webapi) for more information. 
 
 ### Important Variations and Notes
 
