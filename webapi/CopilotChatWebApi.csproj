@@ -34,7 +34,7 @@
     <PackageReference Include="Microsoft.SemanticKernel.Plugins.OpenApi" Version="1.5.0-alpha" />
     <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.5.0-alpha" />
     <PackageReference Include="SharpToken" Version="1.2.17" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
